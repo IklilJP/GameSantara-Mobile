@@ -10,6 +10,22 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const Posts = () => {
+
+  const getTimeAgo = (timestamp) => {
+    const now = Date.now();
+    const secondsAgo = Math.floor((now - timestamp) / 1000);
+  
+    if (secondsAgo < 60) {
+      return `${secondsAgo} detik yang lalu`;
+    } else if (secondsAgo < 3600) {
+      return `${Math.floor(secondsAgo / 60)} menit yang lalu`;
+    } else if (secondsAgo < 86400) {
+      return `${Math.floor(secondsAgo / 3600)} jam yang lalu`;
+    } else {
+      return `${Math.floor(secondsAgo / 86400)} hari yang lalu`;
+    }
+  };
+
   return (
     <View className="bg-black h-full flex-1">
       <ScrollView>
@@ -26,15 +42,20 @@ const Posts = () => {
                 size={32}
                 rounded
                 source={{
-                  uri: "https://randomuser.me/api/portraits/men/36.jpg",
+                  uri: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
                 }}
               />
               <View className="flex-row items-center">
-                <Text className="text-white pl-2">setoyws</Text>
-                <Text className="text-white pl-1 font-thin text-xs"> - </Text>
-                <Text className="text-white pl-1 font-thin text-xs">
-                  1 Hari
-                </Text>
+                <View className="justify-center pl-2">
+                  <View className="flex-row gap-2 ">
+                  <Text className="text-white font-bold">setoyws</Text>
+                    <Text className="text-white font-bold">•</Text>
+                    <Text className="text-red-500 font-bold">Arcade</Text>
+                  </View>
+                  <Text className="text-white font-extralight text-xs">
+                    1 Hari
+                  </Text>
+                </View>
               </View>
             </View>
             <View className="pt-2">
@@ -45,38 +66,6 @@ const Posts = () => {
                 dolorem ab, quia veniam modi. Ex corrupti veniam doloremque
                 aperiam unde assumenda voluptates fugiat est.
               </Text>
-            </View>
-            <View className="flex-row pt-2 gap-2">
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 3</Text>
-              </TouchableOpacity>
             </View>
             <View className="flex-row pt-2 items-center">
               <TouchableOpacity className="p-1">
@@ -108,11 +97,16 @@ const Posts = () => {
                 }}
               />
               <View className="flex-row items-center">
-                <Text className="text-white pl-2">setoyws</Text>
-                <Text className="text-white pl-1 font-thin text-xs"> - </Text>
-                <Text className="text-white pl-1 font-thin text-xs">
-                  1 Hari
-                </Text>
+                <View className="justify-center pl-2">
+                  <View className="flex-row gap-2 ">
+                  <Text className="text-white font-bold">setoyws</Text>
+                    <Text className="text-white font-bold">•</Text>
+                    <Text className="text-red-500 font-bold">Arcade</Text>
+                  </View>
+                  <Text className="text-white font-extralight text-xs">
+                    1 Hari
+                  </Text>
+                </View>
               </View>
             </View>
             <View className="pt-2">
@@ -123,38 +117,6 @@ const Posts = () => {
                 dolorem ab, quia veniam modi. Ex corrupti veniam doloremque
                 aperiam unde assumenda voluptates fugiat est.
               </Text>
-            </View>
-            <View className="flex-row pt-2 gap-2">
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 3</Text>
-              </TouchableOpacity>
             </View>
             <View className="flex-row pt-2 items-center">
               <TouchableOpacity className="p-1">
@@ -186,11 +148,16 @@ const Posts = () => {
                 }}
               />
               <View className="flex-row items-center">
-                <Text className="text-white pl-2">setoyws</Text>
-                <Text className="text-white pl-1 font-thin text-xs"> - </Text>
-                <Text className="text-white pl-1 font-thin text-xs">
-                  1 Hari
-                </Text>
+                <View className="justify-center pl-2">
+                  <View className="flex-row gap-2 ">
+                  <Text className="text-white font-bold">setoyws</Text>
+                    <Text className="text-white font-bold">•</Text>
+                    <Text className="text-red-500 font-bold">Arcade</Text>
+                  </View>
+                  <Text className="text-white font-extralight text-xs">
+                    1 Hari
+                  </Text>
+                </View>
               </View>
             </View>
             <View className="pt-2">
@@ -201,38 +168,6 @@ const Posts = () => {
                 dolorem ab, quia veniam modi. Ex corrupti veniam doloremque
                 aperiam unde assumenda voluptates fugiat est.
               </Text>
-            </View>
-            <View className="flex-row pt-2 gap-2">
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 2</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="p-1"
-                style={{
-                  borderColor: "grey",
-                  borderWidth: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <Text className="text-white text-sm font-light"># Tag 3</Text>
-              </TouchableOpacity>
             </View>
             <View className="flex-row pt-2 items-center">
               <TouchableOpacity className="p-1">

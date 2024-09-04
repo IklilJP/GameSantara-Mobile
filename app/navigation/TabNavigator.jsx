@@ -1,12 +1,14 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import HomeScreen from "../screens/HomeScreen/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
+// TabNavigator.jsx
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+import HomeScreen from '../screens/HomeScreen/HomeScreen'
+import ProfileScreen from '../screens/ProfileScreen/ProfileScreen'
+import AddThreadScreen from '../screens/AddThreadScreen/AddThreadScreen';
 
 const Tab = createBottomTabNavigator();
-const TabNavigator = () => {
+
+function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -22,6 +24,8 @@ const TabNavigator = () => {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
+          } else if (route.name === "AddThread") {
+            iconName = focused ? "add-circle" : "add-circle-outline";
           }
 
           return (
@@ -35,11 +39,10 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen name="Homes" component={HomeScreen} />
+      <Tab.Screen name="AddThread" component={AddThreadScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
-};
-
-const styles = StyleSheet.create({});
+}
 
 export default TabNavigator;

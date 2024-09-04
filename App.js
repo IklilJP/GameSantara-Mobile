@@ -1,13 +1,12 @@
-import './gesture-handler';
+import "./gesture-handler";
 import { Button, createTheme, ThemeProvider } from "@rneui/themed";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import HomeScreen from "./app/screens/HomeScreen/HomeScreen";
-import { color } from "@rneui/base";
-import TabNavigator from "./app/navigation/TabNavigator";
 import { NavigationContainer } from "@react-navigation/native";
-import DrawerNavigator from './app/navigation/DrawerNavigator';
+import DrawerNavigator from "./app/navigation/DrawerNavigator";
+import Toast from "react-native-toast-message";
+import { createStore } from "redux";
+import { reducers } from "./app/store/store";
+import { Provider } from "react-redux";
 
 const theme = createTheme({
   lightColors: {
@@ -24,14 +23,17 @@ const theme = createTheme({
   },
 });
 
+const store = createStore(reducers);
 export default function App() {
   return (
     <SafeAreaProvider>
+      <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <DrawerNavigator />
-        </NavigationContainer>
-      </ThemeProvider>
+          <NavigationContainer>
+            <DrawerNavigator/>
+          </NavigationContainer>
+        <Toast />
+      </ThemeProvider></Provider>
     </SafeAreaProvider>
   );
 }
