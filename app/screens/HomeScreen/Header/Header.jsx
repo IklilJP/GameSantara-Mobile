@@ -44,7 +44,6 @@ const Header = () => {
           payload: JSON.parse(loggedInUser),
         });
       }
-      console.log(user);
     } catch (error) {
       console.log(error);
     }
