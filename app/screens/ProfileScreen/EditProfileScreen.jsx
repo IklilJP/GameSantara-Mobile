@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axiosInstance from "../../service/axios";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 
 const EditProfileScreen = () => {
   const navigation = useNavigation();
@@ -51,30 +52,41 @@ const EditProfileScreen = () => {
     setFile(null);
   };
 
-  const uploadImage = async () => {
-    if (!file) {
-      console.error("No image selected");
-      return;
-    }
-
-    setIsLoading(true);
-
-    const formData = new FormData();
-    formData.append("photo", file);
-
-    try {
-      const response = await axiosInstance.patch("/user/profile-picture", formData, {
+ const uploadImage = async () => {
+  if (!file) {
+    console.error("No image selected");
+    return;
+  }
+  setIsLoading(true);
+  const formData = new FormData();
+  formData.append("picture", {
+    uri: file.uri,
+    name: file.uri.split('/').pop(), 
+    type: 'image/jpeg',
+  });
+  try {
+    const response = await axiosInstance.patch(
+      "/user/profile-picture", 
+      formData, 
+      {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
-      console.log("Upload successful", response.data);
-    } catch (error) {
-      console.error("Upload failed", error);
-    } finally {
-      setIsLoading(false);
+      }
+    );
+    console.log("Upload successful", response.data);
+  } catch (error) {
+    if (error.response) {
+      console.error("Upload failed", error.response.data);
+    } else if (error.request) {
+      console.error("No response received", error.request);
+    } else {
+      console.error("Error", error.message);
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleUpdateUsername = async () => {
     if (username === "") {
