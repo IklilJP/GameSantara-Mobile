@@ -1,5 +1,5 @@
 import { Avatar } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   Modal,
@@ -11,66 +11,86 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import axiosInstance from "../../../service/axios";
+import { useSelector } from "react-redux";
+
 const Profile = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [userDetail, setUserDetail] = useState({});
   const { height } = Dimensions.get("window");
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  const user = useSelector((state) => state.loggedInUser);
+  console.log("User:", user);
+
+  const openModal = () => setModalVisible(true);
+  const closeModal = () => setModalVisible(false);
+
   const handleEditPage = () => {
     setModalVisible(false);
     navigation.navigate("EditProfile");
   };
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axiosInstance.get(`/user/${user.loggedInUser?.data?.userId}`);
+      setUserDetail(response.data.data);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    setUserDetail(null)
+  }, [user.loggedInUser]);
+
+  const defaultProfile = {
+    fullName: "user",
+    username: "user",
+    bio: "Tidak ada Bio",
+    profilePicture: {
+      image: "https://randomuser.me/api/portraits/men/36.jpg",
+    },
+  };
+
+  const profile = {
+    fullName: userDetail?.fullName || defaultProfile.fullName,
+    username: userDetail?.username || defaultProfile.username,
+    bio: userDetail?.bio || defaultProfile.bio,
+    profilePicture: userDetail?.profilePicture || defaultProfile.profilePicture,
+  };
+
   return (
-    <View className="bg-black">
-      <View
-        className="p-5"
-        style={{ backgroundColor: "#1d232a", marginVertical: 1 }}
-      >
-        <View>
-          <View className="flex-row">
-            <View className="mr-10">
-              <Avatar
-                size={110}
-                rounded
-                source={{
-                  uri: "https://randomuser.me/api/portraits/men/36.jpg",
-                }}
-              />
+    <View style={styles.container}>
+      <View style={styles.profileHeader}>
+        <View style={styles.profileInfo}>
+          <Avatar
+            size={110}
+            rounded
+            source={{ uri: profile.profilePicture.image }}
+          />
+          <View style={styles.statsContainer}>
+            <View style={styles.stat}>
+              <Text style={styles.statValue}>212</Text>
+              <Text style={styles.statLabel}>pos</Text>
             </View>
-            <View className="flex-row gap-5 w-3/6">
-              <View className="items-center justify-center">
-                <Text className="text-white font-bold text-lg">212</Text>
-                <Text className="text-white">pos</Text>
-              </View>
-              <View className="items-center justify-center">
-                <Text className="text-white font-bold text-lg">111</Text>
-                <Text className="text-white">reputasi</Text>
-              </View>
-              <View className="items-center justify-center">
-                <Text className="text-white font-bold text-lg">99</Text>
-                <Text className="text-white">award</Text>
-              </View>
+            <View style={styles.stat}>
+              <Text style={styles.statValue}>111</Text>
+              <Text style={styles.statLabel}>reputasi</Text>
             </View>
-            <View className="flex-1 items-end">
-              <TouchableOpacity onPress={openModal}>
-                <Ionicons name="ellipsis-horizontal" size={24} color="white" />
-              </TouchableOpacity>
+            <View style={styles.stat}>
+              <Text style={styles.statValue}>99</Text>
+              <Text style={styles.statLabel}>award</Text>
             </View>
           </View>
-          <View className="pt-2">
-            <Text className="text-white font-bold text-lg">
-              Donquixote Setotose
-            </Text>
-            <Text className="text-white">@setoyws</Text>
-          </View>
-          <View className="pt-5">
-            <Text className="text-white">Tidak ada Bio</Text>
-          </View>
+          <TouchableOpacity style={styles.menuButton} onPress={openModal}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.profileDetails}>
+          <Text style={styles.profileName}>{profile.fullName}</Text>
+          <Text style={styles.profileUsername}>@{profile.username}</Text>
+          <Text style={styles.profileBio}>{profile.bio}</Text>
         </View>
       </View>
       <Modal
@@ -83,15 +103,10 @@ const Profile = () => {
           <View style={styles.modalBackdrop}>
             <View style={[styles.modalContainer, { height: height / 4 }]}>
               <Text style={styles.modalTitle}>Pilihan Menu</Text>
-              <View
-                className="w-full bg-slate-600 my-2"
-                style={{ height: 1 }}
-              />
-              <TouchableOpacity className="p-2" onPress={handleEditPage}>
-                <View className="flex-row items-center">
-                  <Ionicons name="pencil-outline" size={24} color="white" />
-                  <Text className="pl-5 text-white">Edit Profile</Text>
-                </View>
+              <View style={styles.modalDivider} />
+              <TouchableOpacity style={styles.modalOption} onPress={handleEditPage}>
+                <Ionicons name="pencil-outline" size={24} color="white" />
+                <Text style={styles.modalOptionText}>Edit Profile</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -103,17 +118,56 @@ const Profile = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
+    backgroundColor: "black",
+  },
+  profileHeader: {
+    padding: 20,
+    backgroundColor: "#1d232a",
+    marginVertical: 1,
+  },
+  profileInfo: {
+    flexDirection: "row",
     alignItems: "center",
   },
-  profileButton: {
-    marginBottom: 20,
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "50%",
+  },
+  stat: {
+    alignItems: "center",
+  },
+  statValue: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  statLabel: {
+    color: "white",
+  },
+  menuButton: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  profileDetails: {
+    paddingTop: 10,
+  },
+  profileName: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  profileUsername: {
+    color: "white",
+  },
+  profileBio: {
+    color: "white",
+    paddingTop: 10,
   },
   modalBackdrop: {
     flex: 1,
-    justifyContent: "flex-end", // Align modal container to the bottom
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark overlay
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContainer: {
     width: "100%",
@@ -128,24 +182,20 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: "white",
   },
-  menuItem: {
-    paddingVertical: 15,
+  modalDivider: {
     width: "100%",
+    backgroundColor: "#6b7280",
+    height: 1,
+    marginVertical: 10,
+  },
+  modalOption: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  menuText: {
-    fontSize: 22,
-    color: "white",
-  },
-  closeButton: {
-    marginTop: 20,
     padding: 10,
-    backgroundColor: "tomato",
-    borderRadius: 5,
   },
-  closeButtonText: {
+  modalOptionText: {
+    paddingLeft: 10,
     color: "white",
-    fontWeight: "bold",
   },
 });
 

@@ -2,6 +2,7 @@ import { Tab, TabView } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Posts from "../../HomeScreen/Posts/Posts";
+import PostsByUser from "../../HomeScreen/Posts/PostByUser";
 
 const TabProfile = () => {
   const [index, setIndex] = useState(0);
@@ -24,7 +25,7 @@ const TabProfile = () => {
       </Tab>
       <TabView value={index} onChange={setIndex} animationType="spring">
         <TabView.Item style={{ width: "100%" }}>
-          <Posts />
+          <PostsByUser />
         </TabView.Item>
         <TabView.Item style={{ width: "100%" }}>
           <Posts />

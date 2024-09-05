@@ -44,9 +44,9 @@ const Header = () => {
           payload: JSON.parse(loggedInUser),
         });
       }
-      console.log(user);
+
     } catch (error) {
-      console.log(error);
+
     }
   };
 
@@ -117,8 +117,8 @@ const Header = () => {
     });
     await AsyncStorage.removeItem("loggedInUser");
     checkLoginUser();
-    console.log(user);
     setModalVisible(false);
+    setModalLoginVisible(true);
   };
 
   const handleSubmitRegister = async (data) => {
@@ -129,9 +129,9 @@ const Header = () => {
         fullName: data.fullName,
         email: data.email,
       });
-      console.log(response.data);
+
     } catch (error) {
-      console.log(error.message);
+
     }
   };
 
