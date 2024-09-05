@@ -23,7 +23,7 @@ const Posts = (props) => {
         size: 10,
         q: props?.tags,
       });
-      console.log(props.tags);
+
       setThreadList(response.data.data);
     } catch (error) {
       console.log(error.message);

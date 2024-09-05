@@ -11,6 +11,7 @@ import {
 import { Avatar, Card } from "@rneui/themed";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import axiosInstance from "../../../service/axios";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const PostsByUser = () => {
   const [posts, setPosts] = useState([]);
@@ -25,7 +26,7 @@ const PostsByUser = () => {
         params: {
           page: 1,
           size: 10,
-          by:"user",
+          by: "user",
         },
       });
       setPosts(response.data.data);
@@ -50,27 +51,73 @@ const PostsByUser = () => {
   }, [posts]);
 
   const formatTimeAgo = (timestamp) => {
-    const now = new Date();
-    const postDate = new Date(timestamp * 1000);
-    const diffInSeconds = Math.floor((now - postDate) / 1000);
+    const now = Date.now();
+    const postDate = new Date(parseInt(timestamp)).getTime();
+    const secondsAgo = Math.floor((now - postDate) / 1000);
 
-    const intervals = {
-      year: 31536000,
-      month: 2592000,
-      week: 604800,
-      day: 86400,
-      hour: 3600,
-      minute: 60,
-      second: 1,
-    };
-
-    for (const [unit, value] of Object.entries(intervals)) {
-      const interval = Math.floor(diffInSeconds / value);
-      if (interval >= 1) {
-        return `${interval} ${unit}${interval > 1 ? 's' : ''} ago`;
-      }
+    if (secondsAgo < 60) {
+      return `${secondsAgo} detik yang lalu`;
+    } else if (secondsAgo < 3600) {
+      return `${Math.floor(secondsAgo / 60)} menit yang lalu`;
+    } else if (secondsAgo < 86400) {
+      return `${Math.floor(secondsAgo / 3600)} jam yang lalu`;
+    } else {
+      return `${Math.floor(secondsAgo / 86400)} hari yang lalu`;
     }
-    return "just now";
+  };
+
+  const handleUpVote = async (post) => {
+    try {
+      const response = await axiosInstance.post(`/vote-posts/${post.id}/up-vote`);
+      if (response.status === 200) {
+        setPosts((prevPosts) =>
+          prevPosts.map((p) =>
+            p.id === post.id
+              ? {
+                  ...p,
+                  upVotesCount: post.isUpVoted
+                    ? p.upVotesCount - 1
+                    : p.upVotesCount + 1,
+                  isUpVoted: !post.isUpVoted,
+                  downVotesCount: post.isDownVoted
+                    ? p.downVotesCount - 1
+                    : p.downVotesCount,
+                  isDownVoted: false,
+                }
+              : p,
+          ),
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDownVote = async (post) => {
+    try {
+      const response = await axiosInstance.post(`/vote-posts/${post.id}/down-vote`);
+      if (response.status === 200) {
+        setPosts((prevPosts) =>
+          prevPosts.map((p) =>
+            p.id === post.id
+              ? {
+                  ...p,
+                  downVotesCount: post.isDownVoted
+                    ? p.downVotesCount - 1
+                    : p.downVotesCount + 1,
+                  isDownVoted: !post.isDownVoted,
+                  upVotesCount: post.isUpVoted
+                    ? p.upVotesCount - 1
+                    : p.upVotesCount,
+                  isUpVoted: false,
+                }
+              : p,
+          ),
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   if (isLoading) {
@@ -85,62 +132,75 @@ const PostsByUser = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.content}>
-          {posts.map((post) => (
-            <Card key={post.id} containerStyle={styles.cardContainer}>
-              <View style={styles.header}>
-                <Avatar
-                  size={32}
-                  rounded
-                  source={{
-                    uri: post.profilePictureUrl || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-                  }}
-                />
-                <View style={styles.headerText}>
-                  <View style={styles.headerInfo}>
-                    <Text style={styles.username}>{post.user}</Text>
-                    <Text style={styles.dot}>•</Text>
-                    <Text style={styles.category}>{post.tagName}</Text>
+          {posts.length === 0 ? (
+            <Text style={styles.noPostsText}>Anda belum membuat post</Text>
+          ) : (
+            posts.map((post) => (
+              <Card key={post.id} containerStyle={styles.cardContainer}>
+                <View style={styles.header}>
+                  <Avatar
+                    size={32}
+                    rounded
+                    source={{
+                      uri: post.profilePictureUrl || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+                    }}
+                  />
+                  <View style={styles.headerText} className= "justify-center pl-2">
+                    <View style={styles.headerInfo}>
+                      <Text style={styles.username}>{post.user}</Text>
+                      <Text style={styles.dot}>•</Text>
+                      <Text style={styles.category}>{post.tagName}</Text>
+                    </View>
+                    <Text style={styles.timeAgo}>
+                      {formatTimeAgo(post.createAt)}
+                    </Text>
                   </View>
-                  <Text style={styles.timeAgo}>
-                    {formatTimeAgo(post.createdAt)}
-                  </Text>
                 </View>
-              </View>
-              <View style={styles.body}>
-                <Text style={styles.title}>{post.title}</Text>
-                <View style={styles.descriptionContainer}>
-                  <Text ref={bodyRef} style={styles.description} numberOfLines={3}>
-                    {post.body}
-                  </Text>
-                  {isClamped && (
-                    <Text style={styles.readMore}>Lihat selengkapnya...</Text>
-                  )}
+                <View style={styles.body}>
+                  <Text style={styles.title}>{post.title}</Text>
+                  <View style={styles.descriptionContainer}>
+                    <Text ref={bodyRef} style={styles.description} numberOfLines={3}>
+                      {post.body}
+                    </Text>
+                    {isClamped && (
+                      <Text style={styles.readMore}>Lihat selengkapnya...</Text>
+                    )}
+                  </View>
+                  <View style={styles.imagesContainer}>
+                    {post.pictures?.map((image, index) => (
+                      <Image
+                        key={index}
+                        source={{ uri: image.imageUrl }}
+                        style={styles.image}
+                      />
+                    ))}
+                  </View>
                 </View>
-                <View style={styles.imagesContainer}>
-                  {post.pictures?.map((image, index) => (
-                    <Image
-                      key={index}
-                      source={{ uri: image.imageUrl }}
-                      style={styles.image}
+                <View style={styles.footer}>
+                  <TouchableOpacity style={styles.iconButton} onPress={() => handleUpVote(post)}>
+                    <MaterialCommunityIcons
+                      name={post.isUpVoted ? "arrow-up-bold" : 'arrow-up-bold-outline'}
+                      size={24}
+                      color={post.isUpVoted ? "tomato" : 'white'}
                     />
-                  ))}
+                    <Text style={post.isUpVoted ? styles.voteCountActive : styles.voteCount}>{post.upVotesCount}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.iconButton} onPress={() => handleDownVote(post)}>
+                    <MaterialCommunityIcons
+                      name={post.isDownVoted ? "arrow-down-bold" : 'arrow-down-bold-outline'}
+                      size={24}
+                      color={post.isDownVoted ? "tomato" : 'white'}
+                    />
+                    <Text style={post.isDownVoted ? styles.voteCountActive : styles.voteCount}>{post.downVotesCount}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.iconButton}>
+                    <Ionicons name="chatbox-outline" size={22} color="white" />
+                    <Text style={styles.commentCount}>{post.commentsCount}</Text>
+                  </TouchableOpacity>
                 </View>
-              </View>
-              <View style={styles.footer}>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons name="caret-up" size={24} color="white" />
-                </TouchableOpacity>
-                <Text style={styles.voteCount}>{post.upvotes}</Text>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons name="caret-down" size={24} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton}>
-                  <Ionicons name="chatbox" size={22} color="white" />
-                </TouchableOpacity>
-                <Text style={styles.commentCount}>{post.commentsCount}</Text>
-              </View>
-            </Card>
-          ))}
+              </Card>
+            ))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -165,9 +225,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: "col",
     flex: 1,
     paddingLeft: 10,
   },
@@ -232,10 +290,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   iconButton: {
+    flexDirection: "row",
+    alignItems: "center",
     padding: 5,
   },
   voteCount: {
     color: "white",
+    paddingHorizontal: 5,
+  },
+  voteCountActive: {
+    color: "red",
     paddingHorizontal: 5,
   },
   commentCount: {
@@ -247,6 +311,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+  },
+  noPostsText: {
+    color: "white",
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
   },
 });
 

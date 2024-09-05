@@ -22,7 +22,6 @@ const PostsTrends = (props) => {
         q: props?.tags,
         by: 'trend',
       });
-      console.log(response.data.data);
       setThreadListTrend(response.data.data);
     } catch (error) {
       console.log(error.message);
