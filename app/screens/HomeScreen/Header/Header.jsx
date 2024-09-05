@@ -44,12 +44,8 @@ const Header = () => {
           payload: JSON.parse(loggedInUser),
         });
       }
-<<<<<<< HEAD
-
-=======
->>>>>>> 736abd3a8b9a8ebf5f49651c1305def5ef23820b
     } catch (error) {
-
+      console.log(error);
     }
   };
 
