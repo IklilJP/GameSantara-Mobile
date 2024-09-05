@@ -4,6 +4,8 @@ import Header from "./Header/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Posts from "./Posts/Posts";
 import { Tab, TabView } from "@rneui/themed";
+import PostsTrends from "./Posts/PostsTrends";
+import PostsLatests from "./Posts/PostsLatests";
 
 const HomeScreen = () => {
   const [index, setIndex] = useState(0);
@@ -32,10 +34,10 @@ const HomeScreen = () => {
             <Posts />
           </TabView.Item>
           <TabView.Item style={{width: '100%'}}>
-            <Posts />
+            <PostsTrends/>
           </TabView.Item>
           <TabView.Item style={{width: '100%'}}>
-            <Posts />
+            <PostsLatests/>
           </TabView.Item>
         </TabView>
       </View>

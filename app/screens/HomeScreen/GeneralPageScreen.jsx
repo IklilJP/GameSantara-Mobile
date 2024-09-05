@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Posts from "./Posts/Posts";
 import { Tab, TabView } from "@rneui/themed";
 import { Text } from "react-native";
+import PostsTrends from "./Posts/PostsTrends";
+import PostsLatests from "./Posts/PostsLatests";
 
 const GeneralPageScreen = ({ route }) => {
   const [index, setIndex] = useState(0);
@@ -46,13 +48,13 @@ const GeneralPageScreen = ({ route }) => {
         </Tab>
         <TabView value={index} onChange={setIndex} animationType="spring">
           <TabView.Item style={{ width: "100%" }}>
-            <Posts />
+            <Posts tags={title} />
           </TabView.Item>
           <TabView.Item style={{ width: "100%" }}>
-            <Posts />
+            <PostsTrends tags={title} />
           </TabView.Item>
           <TabView.Item style={{ width: "100%" }}>
-            <Posts />
+            <PostsLatests tags={title} />
           </TabView.Item>
         </TabView>
       </View>
