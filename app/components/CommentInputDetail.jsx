@@ -2,15 +2,13 @@ import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useRef, useState, useEffect } from "react";
 
-const CommentDetail = ({ isComment, setIsComment }) => {
+const CommentInputDetail = ({ isComment, setIsComment }) => {
   const [contentComment, setContentComment] = useState("");
   const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
-    if (isComment) {
-      textInputRef.current?.focus();
-    }
+    textInputRef.current?.focus();
   }, [isComment]);
 
   return (
@@ -52,4 +50,4 @@ const CommentDetail = ({ isComment, setIsComment }) => {
   );
 };
 
-export default CommentDetail;
+export default CommentInputDetail;

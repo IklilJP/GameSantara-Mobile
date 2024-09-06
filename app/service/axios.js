@@ -9,8 +9,8 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-      const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-      const token = JSON.parse(loggedInUser)?.data.token;
+    const loggedInUser = await AsyncStorage.getItem("loggedInUser");
+    const token = JSON.parse(loggedInUser)?.data.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -22,3 +22,4 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
+
