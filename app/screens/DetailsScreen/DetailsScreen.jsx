@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -125,6 +126,21 @@ const DetailsScreen = ({ route }) => {
             </Text>
 
             <Text className="text-gray-300 leading-5">{threadDetail.body}</Text>
+          </View>
+
+          <View className="flex-row flex-wrap gap-5 my-5">
+            {threadDetail.pictures?.map((image, index) => (
+              <View
+                key={index}
+                className={`shadow-xl bg-black rounded-lg w-[100%]`}
+                style={{ aspectRatio: 1 }}>
+                <Image
+                  source={{ uri: image.imageUrl }}
+                  style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                  resizeMode="contain"
+                />
+              </View>
+            ))}
           </View>
 
           <View className="flex-row pt-2 items-center">
