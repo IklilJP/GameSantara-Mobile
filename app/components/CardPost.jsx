@@ -1,4 +1,4 @@
-import { Avatar, Card } from "@rneui/themed";
+import { Avatar, Card, Image } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -6,6 +6,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import axiosInstance from "../service/axios";
 import { formatTime } from "../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
 
 const CardPost = ({ item, setThreadList }) => {
   const navigation = useNavigation();
@@ -107,7 +108,28 @@ const CardPost = ({ item, setThreadList }) => {
           <Text className="text-lg font-bold text-gray-300 leading-6 mb-2">
             {item.title}
           </Text>
-          <Text className="text-sm text-gray-300">{item.body}</Text>
+          <Text className="text-gray-300">{item.body}</Text>
+        </View>
+
+        <View className="flex-row flex-wrap gap-2 my-5">
+          {item.pictures.map((image, index) => (
+            <View
+              key={index}
+              className={`relative shadow-xl bg-black rounded-lg w-[48%] h-40`}>
+              <Image
+                source={{ uri: image.imageUrl }}
+                style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                resizeMode="cover"
+              />
+              {index >= 3 && (
+                <View className="absolute w-full h-full inset-0 bg-black/40 justify-center items-center rounded-md">
+                  <Text className="text-white text-lg font-bold">
+                    + {item.pictures.length - 3}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ))}
         </View>
         <View className="flex-row pt-2 items-center">
           <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
