@@ -13,6 +13,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../../service/axios";
 import { useSelector } from "react-redux";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -32,7 +33,9 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axiosInstance.get(`/user/${user.loggedInUser?.data?.userId}`);
+      const response = await axiosInstance.get(
+        `/user/${user.loggedInUser?.data?.userId}`,
+      );
       setUserDetail(response.data.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -41,7 +44,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserData();
-    setUserDetail(null)
+    setUserDetail(null);
   }, [user.loggedInUser]);
 
   const defaultProfile = {
@@ -69,23 +72,31 @@ const Profile = () => {
             rounded
             source={{ uri: profile.profilePicture.image }}
           />
-          <View style={styles.statsContainer}>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>212</Text>
-              <Text style={styles.statLabel}>pos</Text>
+          <View className="flex-col items-center justify-center pt-5 gap-4 flex-1">
+            <View style={styles.statsContainer}>
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>212</Text>
+                <Text style={styles.statLabel}>pos</Text>
+              </View>
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>111</Text>
+                <Text style={styles.statLabel}>reputasi</Text>
+              </View>
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>99</Text>
+                <Text style={styles.statLabel}>award</Text>
+              </View>
             </View>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>111</Text>
-              <Text style={styles.statLabel}>reputasi</Text>
-            </View>
-            <View style={styles.stat}>
-              <Text style={styles.statValue}>99</Text>
-              <Text style={styles.statLabel}>award</Text>
+            <View className="flex-1 w-full justify-center items-center">
+              <TouchableOpacity style={styles.menuButton} onPress={openModal}>
+                {/* <Ionicons name="ellipsis-horizontal" size={24} color="white" /> */}
+                <FontAwesome name="edit" size={15} color={"white"} />
+                <Text className="text-white text-xs text-center">
+                  Edit Profile
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={styles.menuButton} onPress={openModal}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="white" />
-          </TouchableOpacity>
         </View>
         <View style={styles.profileDetails}>
           <Text style={styles.profileName}>{profile.fullName}</Text>
@@ -97,14 +108,15 @@ const Profile = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={closeModal}
-      >
+        onRequestClose={closeModal}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.modalBackdrop}>
             <View style={[styles.modalContainer, { height: height / 4 }]}>
               <Text style={styles.modalTitle}>Pilihan Menu</Text>
               <View style={styles.modalDivider} />
-              <TouchableOpacity style={styles.modalOption} onPress={handleEditPage}>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={handleEditPage}>
                 <Ionicons name="pencil-outline" size={24} color="white" />
                 <Text style={styles.modalOptionText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -126,28 +138,41 @@ const styles = StyleSheet.create({
     marginVertical: 1,
   },
   profileInfo: {
+    gap: 20,
     flexDirection: "row",
     alignItems: "center",
   },
   statsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "50%",
+    width: "100%",
   },
   stat: {
-    alignItems: "center",
+    flex: 1,
+    // alignItems: "center",
   },
   statValue: {
+    textAlign: "center",
     color: "white",
     fontWeight: "bold",
     fontSize: 18,
   },
   statLabel: {
+    textAlign: "center",
     color: "white",
   },
   menuButton: {
-    flex: 1,
-    alignItems: "flex-end",
+    // width: "50%",
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    borderRadius: 20,
+    gap: 10,
+    // flex: 1,
   },
   profileDetails: {
     paddingTop: 10,
@@ -200,3 +225,4 @@ const styles = StyleSheet.create({
 });
 
 export default Profile;
+

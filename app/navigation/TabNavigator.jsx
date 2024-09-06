@@ -1,10 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
-import AddThreadScreen from '../screens/AddThreadScreen/AddThreadScreen';
+import React from "react";
+import { useSelector } from "react-redux";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
+import HomeScreen from "../screens/HomeScreen/HomeScreen";
+import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
+import AddThreadScreen from "../screens/AddThreadScreen/AddThreadScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,8 +37,7 @@ function TabNavigator() {
             />
           );
         },
-      })}
-    >
+      })}>
       <Tab.Screen name="Homes" component={HomeScreen} />
       {user && <Tab.Screen name="AddThread" component={AddThreadScreen} />}
       {user && <Tab.Screen name="Profile" component={ProfileScreen} />}
@@ -47,3 +46,4 @@ function TabNavigator() {
 }
 
 export default TabNavigator;
+

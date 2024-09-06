@@ -20,7 +20,7 @@ const PostsTrends = (props) => {
         page: 1,
         size: 10,
         q: props?.tags,
-        by: 'trend',
+        by: "trend",
       });
       setThreadListTrend(response.data.data);
     } catch (error) {
@@ -48,8 +48,7 @@ const PostsTrends = (props) => {
         width: "100%",
         marginHorizontal: 0,
         backgroundColor: "#1d232a",
-      }}
-    >
+      }}>
       <View className="flex-row items-center">
         <Avatar
           size={32}
@@ -109,7 +108,5 @@ const PostsTrends = (props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default PostsTrends;

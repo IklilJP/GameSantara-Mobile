@@ -11,8 +11,8 @@ const HomeScreen = () => {
   const [index, setIndex] = useState(0);
 
   const getTitleStyle = (tabIndex) => ({
-    color: 'white',
-    fontWeight: index === tabIndex ? 'bold' : '300',
+    color: "white",
+    fontWeight: index === tabIndex ? "bold" : "300",
   });
 
   return (
@@ -23,21 +23,20 @@ const HomeScreen = () => {
           value={index}
           onChange={(e) => setIndex(e)}
           indicatorStyle={{ backgroundColor: "#dc2626", height: 3 }}
-          style={{ backgroundColor: "#1d232a" }}
-        >
+          style={{ backgroundColor: "#1d232a" }}>
           <Tab.Item title="Beranda" titleStyle={getTitleStyle(0)} />
           <Tab.Item title="Trending" titleStyle={getTitleStyle(1)} />
           <Tab.Item title="Terbaru" titleStyle={getTitleStyle(2)} />
         </Tab>
         <TabView value={index} onChange={setIndex} animationType="spring">
-          <TabView.Item style={{width: '100%'}}>
+          <TabView.Item style={{ width: "100%" }}>
             <Posts />
           </TabView.Item>
-          <TabView.Item style={{width: '100%'}}>
-            <PostsTrends/>
+          <TabView.Item style={{ width: "100%" }}>
+            <PostsTrends />
           </TabView.Item>
-          <TabView.Item style={{width: '100%'}}>
-            <PostsLatests/>
+          <TabView.Item style={{ width: "100%" }}>
+            <PostsLatests />
           </TabView.Item>
         </TabView>
       </View>
