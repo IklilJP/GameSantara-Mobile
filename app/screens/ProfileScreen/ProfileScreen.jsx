@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Animated,Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../HomeScreen/Header/Header";
 import Profile from "./Profile/Profile";
@@ -9,13 +16,12 @@ import Collapsible from "react-native-collapsible";
 const { height } = Dimensions.get("window");
 
 const ProfileScreen = () => {
-  
   return (
     <SafeAreaView className="flex-1 bg-black">
       <View className="flex-1 bg-black">
-          <Header />
-          <Profile />
-          <TabProfile />
+        <Header />
+        <Profile />
+        <TabProfile />
       </View>
     </SafeAreaView>
   );

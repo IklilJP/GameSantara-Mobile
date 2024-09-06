@@ -1,110 +1,78 @@
-import { Avatar, Card } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { FlatList, View, Text, ActivityIndicator } from "react-native";
 import axiosInstance from "../../../service/axios";
+import CardPost from "../../../components/CardPost";
 
 const PostsTrends = (props) => {
   const [threadListTrend, setThreadListTrend] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const getPostData = async () => {
+  const getPostData = async (page = 1) => {
     try {
+      if (page === 1) setLoading(true);
+      else setLoadingMore(true);
+
       const response = await axiosInstance.get("/post", {
-        page: 1,
-        size: 10,
-        q: props?.tags,
-        by: "trend",
+        params: {
+          page: page,
+          size: 4,
+          q: props?.tags,
+          by: "trend",
+        },
       });
-      setThreadListTrend(response.data.data);
+
+      console.log("Fetched data:", response.data);
+
+      const newPosts = response.data.data;
+      const paging = response.data.paging;
+      console.log(paging);
+      console.log(newPosts);
+
+      setThreadListTrend((prevPosts) =>
+        page === 1 ? newPosts : [...prevPosts, ...newPosts],
+      );
+
+      setHasMore(paging.hasNext);
     } catch (error) {
-      console.log(error.message);
-    }
-  };
-  const getTimeAgo = (timestamp) => {
-    const now = Date.now();
-    const secondsAgo = Math.floor((now - timestamp) / 1000);
-
-    if (secondsAgo < 60) {
-      return `${secondsAgo} detik yang lalu`;
-    } else if (secondsAgo < 3600) {
-      return `${Math.floor(secondsAgo / 60)} menit yang lalu`;
-    } else if (secondsAgo < 86400) {
-      return `${Math.floor(secondsAgo / 3600)} jam yang lalu`;
-    } else {
-      return `${Math.floor(secondsAgo / 86400)} hari yang lalu`;
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
-  const renderItem = ({ item }) => (
-    <Card
-      containerStyle={{
-        width: "100%",
-        marginHorizontal: 0,
-        backgroundColor: "#1d232a",
-      }}>
-      <View className="flex-row items-center">
-        <Avatar
-          size={32}
-          rounded
-          source={{
-            uri: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-          }}
-        />
-        <View className="flex-row items-center">
-          <View className="justify-center pl-2">
-            <View className="flex-row gap-2 ">
-              <Text className="text-white font-bold">{item.user}</Text>
-              <Text className="text-white font-bold">•</Text>
-              <Text className="text-red-500 font-bold">{item.tagName}</Text>
-            </View>
-            <Text className="text-white font-extralight text-xs">
-              {getTimeAgo(item.createAt)}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View className="pt-2">
-        <Text className="text-white text-2xl">{item.title}</Text>
-        <Text className="text-white text-sm font-light">{item.body}</Text>
-      </View>
-      <View className="flex-row pt-2 items-center">
-        <TouchableOpacity className="p-1">
-          <Ionicons name="caret-up" size={24} color="white" />
-        </TouchableOpacity>
-        <Text className="text-white">
-          {item.upVotesCount - item.downVotesCount}
-        </Text>
-        <TouchableOpacity className="p-1 pl-3">
-          <Ionicons name="caret-down" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity className="p-1 pl-5">
-          <Ionicons name="chatbox" size={22} color="white" />
-        </TouchableOpacity>
-        <Text className="text-white p-1">{item.commentsCount}</Text>
-      </View>
-    </Card>
-  );
+  const loadMorePosts = () => {
+    if (!loadingMore && hasMore) {
+      console.log("Loading more posts...");
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
 
   useEffect(() => {
-    getPostData();
-  }, []);
+    getPostData(currentPage);
+  }, [currentPage]);
+
+  if (loading && currentPage === 1) {
+    return <Text className="text-white">Loading...</Text>;
+  }
 
   return (
     <View className="bg-black h-full flex-1">
-      <View className="flex-1">
-        <FlatList
-          data={threadListTrend}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
+      <FlatList
+        data={threadListTrend}
+        renderItem={({ item }) => (
+          <CardPost item={item} setThreadList={setThreadListTrend} />
+        )}
+        keyExtractor={(item) => item.id}
+        onEndReached={loadMorePosts}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() =>
+          loadingMore ? <ActivityIndicator size="large" color="white" /> : null
+        }
+      />
     </View>
   );
 };

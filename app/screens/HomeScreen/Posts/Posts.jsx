@@ -39,6 +39,4 @@ const Posts = (props) => {
   );
 };
 
-const styles = StyleSheet.create({});
-
 export default Posts;

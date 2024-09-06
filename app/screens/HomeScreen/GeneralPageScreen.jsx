@@ -24,13 +24,11 @@ const GeneralPageScreen = ({ route }) => {
           <ImageBackground
             className="flex-1 justify-end"
             source={{ uri: img }}
-            resizeMode="stretch"
-          >
+            resizeMode="stretch">
             <View
               key={id}
               className="flex-row gap-5 pb-5 pl-5 items-center"
-              style={{ backgroundColor: "#1d232a" }}
-            >
+              style={{ backgroundColor: "#1d232a" }}>
               <Image source={{ uri: img }} width={25} height={25} />
               <Text className="text-white uppercase">{title}</Text>
             </View>
@@ -40,8 +38,7 @@ const GeneralPageScreen = ({ route }) => {
           value={index}
           onChange={(e) => setIndex(e)}
           indicatorStyle={{ backgroundColor: "#dc2626", height: 3 }}
-          style={{ backgroundColor: "#1d232a" }}
-        >
+          style={{ backgroundColor: "#1d232a" }}>
           <Tab.Item title="Beranda" titleStyle={getTitleStyle(0)} />
           <Tab.Item title="Trending" titleStyle={getTitleStyle(1)} />
           <Tab.Item title="Terbaru" titleStyle={getTitleStyle(2)} />
