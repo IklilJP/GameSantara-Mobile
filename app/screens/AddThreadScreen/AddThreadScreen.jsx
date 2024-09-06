@@ -75,7 +75,7 @@ const AddThreadScreen = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
       console.log("Upload successful", response.data);
     } catch (error) {
@@ -105,14 +105,14 @@ const AddThreadScreen = () => {
       await FileSystem.writeAsStringAsync(fileUri, postCreateRequest);
       console.log(fileUri);
       formData.append("postCreateRequest", {
-            uri: fileUri,
-            type: 'application/json',
-            name: 'postCreateRequest.json',
-          });
+        uri: fileUri,
+        type: "application/json",
+        name: "postCreateRequest.json",
+      });
       imageList.forEach((image) => {
         const newImage = {
           uri: image.uri,
-          type: 'image/jpeg',
+          type: "image/jpeg",
           name: image.fileName,
         };
         console.log(newImage);
@@ -138,11 +138,10 @@ const AddThreadScreen = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView className="flex-grow">
+      <ScrollView className="flex-grow bg-[#1d232a]">
         <View
           className=" justify-center items-center pt-5"
-          style={{ backgroundColor: "#1d232a" }}
-        >
+          style={{ backgroundColor: "#1d232a" }}>
           <View className="flex-row items-center justify-center gap-2">
             <Ionicons name="document-text-outline" size={24} color="white" />
             <Text className="text-white text-lg font-bold">Buat Thread</Text>
@@ -151,8 +150,7 @@ const AddThreadScreen = () => {
         </View>
         <View
           className="flex-1 pt-6 pl-6"
-          style={{ backgroundColor: "#1d232a" }}
-        >
+          style={{ backgroundColor: "#1d232a" }}>
           <Text className="text-white font-bold pb-3">Gambar</Text>
           <View
             className="p-2"
@@ -162,12 +160,10 @@ const AddThreadScreen = () => {
               borderStyle: "dotted",
               borderRadius: 10,
               alignSelf: "flex-start",
-            }}
-          >
+            }}>
             <TouchableOpacity
               style={styles.imageContainer}
-              onPress={selectImage}
-            >
+              onPress={selectImage}>
               <Ionicons name="cloud-upload-outline" size={44} color="grey" />
             </TouchableOpacity>
           </View>
@@ -178,8 +174,7 @@ const AddThreadScreen = () => {
                     <Image source={{ uri: image.uri }} style={styles.image} />
                     <TouchableOpacity
                       style={styles.cancelButton}
-                      onPress={() => handleCancelImage(index)}
-                    >
+                      onPress={() => handleCancelImage(index)}>
                       <Text style={styles.cancelButtonText}>x</Text>
                     </TouchableOpacity>
                   </View>
@@ -299,8 +294,7 @@ const AddThreadScreen = () => {
                   borderRadius: 20,
                   alignSelf: "flex-start",
                 }}
-                onPress={handleSubmit(handleCreateThread)}
-              >
+                onPress={handleSubmit(handleCreateThread)}>
                 <Text className="text-red-600 font-bold">Buat</Text>
               </TouchableOpacity>
             </View>
