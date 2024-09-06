@@ -16,6 +16,7 @@ import axiosInstance from "../../service/axios";
 import { formatTime } from "../../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewing from "react-native-image-viewing";
+import CommentDetail from "../../components/CommentDetail";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -222,34 +223,7 @@ const DetailsScreen = ({ route }) => {
           </View>
         </View>
 
-        <View className="px-4">
-          {!isComment ? (
-            <TouchableOpacity
-              className="flex-row justify-center items-center border border-colorBorder rounded-3xl py-2"
-              onPress={() => setIsComment(true)}>
-              <Ionicons name="add" size={24} color="white" />
-              <Text className="text-white">Tambah Komentar</Text>
-            </TouchableOpacity>
-          ) : (
-            <View className="p-2 border border-colorBorder rounded-xl">
-              <TextInput
-                multiline={true}
-                numberOfLines={10}
-                style={{ height: 100, textAlignVertical: "top" }}
-              />
-              <View className="flex-row justify-end mt-3">
-                <TouchableOpacity
-                  className="py-1 px-2 rounded-lg"
-                  onPress={() => setIsComment(false)}>
-                  <Text className="text-white">Batal</Text>
-                </TouchableOpacity>
-                <TouchableOpacity className="bg-red-500 py-1 px-2 rounded-lg">
-                  <Text className="text-white">Kirim</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        </View>
+        <CommentDetail isComment={isComment} setIsComment={setIsComment} />
       </ScrollView>
 
       <ImageViewing
