@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
-  StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -15,21 +15,30 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axiosInstance from "../../service/axios";
 import { formatTime } from "../../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
+import ImageViewing from "react-native-image-viewing";
+import CommentDetail from "../../components/CommentDetail";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
   const [threadDetail, setThreadDetail] = useState({});
   const navigation = useNavigation();
+  const [isComment, setIsComment] = useState(false);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
 
   const fetchDetailPost = async () => {
     try {
       const response = await axiosInstance.get(`/post/${postId}`);
-      console.log(response.data.data);
       setThreadDetail(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    fetchDetailPost();
+  }, []);
 
   const handleUpVote = async () => {
     try {
@@ -77,20 +86,22 @@ const DetailsScreen = ({ route }) => {
     }
   };
 
-  useEffect(() => {
-    fetchDetailPost();
-  }, []);
+  const images = threadDetail.pictures?.map((image) => ({
+    uri: image.imageUrl,
+  }));
 
   return (
-    <SafeAreaView>
-      <ScrollView className="bg-[#1d232a] min-h-screen">
-        <View className="px-2">
-          <View className="flex-row gap-2 items-center py-4 border-b border-b-black">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Feather name="arrow-left" size={24} color="#d1d5db" />
-            </TouchableOpacity>
-            <Text className="text-gray-300 font-bold text-lg">Thread</Text>
-          </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View className="flex-row gap-2 items-center py-4 px-2 border-b border-b-black bg-[#1d232a]">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Feather name="arrow-left" size={24} color="#d1d5db" />
+        </TouchableOpacity>
+        <Text className="text-gray-300 font-bold text-lg">Thread</Text>
+      </View>
+      <ScrollView
+        className="bg-[#1d232a] flex-1 min-h-screen"
+        contentContainerStyle={{ paddingBottom: 100 }}>
+        <View className="flex-1 px-2 w-full">
           <View className="flex-row items-center my-2" style={{ gap: 10 }}>
             <Avatar
               size={38}
@@ -128,22 +139,49 @@ const DetailsScreen = ({ route }) => {
             <Text className="text-gray-300 leading-5">{threadDetail.body}</Text>
           </View>
 
-          <View className="flex-row flex-wrap gap-5 my-5">
-            {threadDetail.pictures?.map((image, index) => (
-              <View
-                key={index}
-                className={`shadow-xl bg-black rounded-lg w-[100%]`}
+          <View className="my-1">
+            {threadDetail.pictures?.length === 1 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setImageIndex(0);
+                  setIsVisible(true);
+                }}
+                className="shadow-xl bg-black rounded-lg w-[100%]"
                 style={{ aspectRatio: 1 }}>
                 <Image
-                  source={{ uri: image.imageUrl }}
-                  style={{ width: "100%", height: "100%", borderRadius: 8 }}
-                  resizeMode="contain"
+                  source={{ uri: threadDetail.pictures[0].imageUrl }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 8,
+                    marginTop: 10,
+                  }}
+                  resizeMode="cover"
                 />
+              </TouchableOpacity>
+            ) : (
+              <View className="flex-row flex-wrap justify-between">
+                {threadDetail.pictures?.map((image, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setImageIndex(index);
+                      setIsVisible(true);
+                    }}
+                    className="shadow-xl bg-black rounded-lg"
+                    style={{ width: "48%", aspectRatio: 1, marginBottom: 10 }}>
+                    <Image
+                      source={{ uri: image.imageUrl }}
+                      style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                ))}
               </View>
-            ))}
+            )}
           </View>
 
-          <View className="flex-row pt-2 items-center">
+          <View className="flex-row items-center my-5">
             <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
               <TouchableOpacity
                 className="flex-row py-1 px-3 items-center border-r border-gray-600"
@@ -181,17 +219,21 @@ const DetailsScreen = ({ route }) => {
             <TouchableOpacity className="p-1 pl-5">
               <Ionicons name="chatbox-outline" size={22} color="white" />
             </TouchableOpacity>
-            <Text className="text-white p-1">
-              {" "}
-              {threadDetail.commentsCount}
-            </Text>
+            <Text className="text-white p-1">{threadDetail.commentsCount}</Text>
           </View>
         </View>
+
+        <CommentDetail isComment={isComment} setIsComment={setIsComment} />
       </ScrollView>
+
+      <ImageViewing
+        images={images}
+        imageIndex={imageIndex}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default DetailsScreen;
