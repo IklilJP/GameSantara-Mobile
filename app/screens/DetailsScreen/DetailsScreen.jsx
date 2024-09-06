@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -16,6 +15,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import axiosInstance from "../../service/axios";
 import { formatTime } from "../../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
+import ImageViewing from "react-native-image-viewing";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -23,15 +23,21 @@ const DetailsScreen = ({ route }) => {
   const navigation = useNavigation();
   const [isComment, setIsComment] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
   const fetchDetailPost = async () => {
     try {
       const response = await axiosInstance.get(`/post/${postId}`);
-      console.log(response.data.data);
       setThreadDetail(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    fetchDetailPost();
+  }, []);
 
   const handleUpVote = async () => {
     try {
@@ -79,9 +85,9 @@ const DetailsScreen = ({ route }) => {
     }
   };
 
-  useEffect(() => {
-    fetchDetailPost();
-  }, []);
+  const images = threadDetail.pictures?.map((image) => ({
+    uri: image.imageUrl,
+  }));
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -92,9 +98,9 @@ const DetailsScreen = ({ route }) => {
         <Text className="text-gray-300 font-bold text-lg">Thread</Text>
       </View>
       <ScrollView
-        className="bg-[#1d232a] min-h-screen"
+        className="bg-[#1d232a] flex-1 min-h-screen"
         contentContainerStyle={{ paddingBottom: 100 }}>
-        <View className="px-2">
+        <View className="flex-1 px-2 w-full">
           <View className="flex-row items-center my-2" style={{ gap: 10 }}>
             <Avatar
               size={38}
@@ -132,19 +138,46 @@ const DetailsScreen = ({ route }) => {
             <Text className="text-gray-300 leading-5">{threadDetail.body}</Text>
           </View>
 
-          <View className="flex-row flex-wrap gap-5 my-1">
-            {threadDetail.pictures?.map((image, index) => (
-              <View
-                key={index}
-                className={`shadow-xl bg-black rounded-lg w-[100%]`}
+          <View className="my-1">
+            {threadDetail.pictures?.length === 1 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setImageIndex(0);
+                  setIsVisible(true);
+                }}
+                className="shadow-xl bg-black rounded-lg w-[100%]"
                 style={{ aspectRatio: 1 }}>
                 <Image
-                  source={{ uri: image.imageUrl }}
-                  style={{ width: "100%", height: "100%", borderRadius: 8 }}
-                  resizeMode="contain"
+                  source={{ uri: threadDetail.pictures[0].imageUrl }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 8,
+                    marginTop: 10,
+                  }}
+                  resizeMode="cover"
                 />
+              </TouchableOpacity>
+            ) : (
+              <View className="flex-row flex-wrap justify-between">
+                {threadDetail.pictures?.map((image, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setImageIndex(index);
+                      setIsVisible(true);
+                    }}
+                    className="shadow-xl bg-black rounded-lg"
+                    style={{ width: "48%", aspectRatio: 1, marginBottom: 10 }}>
+                    <Image
+                      source={{ uri: image.imageUrl }}
+                      style={{ width: "100%", height: "100%", borderRadius: 8 }}
+                      resizeMode="cover"
+                    />
+                  </TouchableOpacity>
+                ))}
               </View>
-            ))}
+            )}
           </View>
 
           <View className="flex-row items-center my-5">
@@ -204,26 +237,29 @@ const DetailsScreen = ({ route }) => {
                 numberOfLines={10}
                 style={{ height: 100, textAlignVertical: "top" }}
               />
-              <View className="flex-row gap-2 justify-end">
+              <View className="flex-row justify-end mt-3">
                 <TouchableOpacity
-                  className="bg-red-600 text-white px-3 py-1 rounded-lg"
+                  className="py-1 px-2 rounded-lg"
                   onPress={() => setIsComment(false)}>
-                  <Text className="text-[#fff]">Cancel</Text>
+                  <Text className="text-white">Batal</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  className="bg-blue-700 text-white px-3 py-1 rounded-lg"
-                  onPress={() => setIsComment(false)}>
-                  <Text className="text-[#fff]">Kirim</Text>
+                <TouchableOpacity className="bg-red-500 py-1 px-2 rounded-lg">
+                  <Text className="text-white">Kirim</Text>
                 </TouchableOpacity>
               </View>
             </View>
           )}
         </View>
       </ScrollView>
+
+      <ImageViewing
+        images={images}
+        imageIndex={imageIndex}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default DetailsScreen;
