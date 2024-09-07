@@ -38,8 +38,8 @@ const Header = () => {
   const checkLoginUser = async () => {
     try {
       const loggedInUser = await AsyncStorage.getItem("loggedInUser");
-      const responseUserDetail = await axiosInstance.get("/user");
       if (loggedInUser) {
+        const responseUserDetail = await axiosInstance.get("/user");
         dispatch({
           type: "LOGIN",
           payload: responseUserDetail.data,

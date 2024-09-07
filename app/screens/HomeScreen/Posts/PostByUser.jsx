@@ -79,7 +79,9 @@ const PostsByUser = () => {
 
   const handleUpVote = async (post) => {
     try {
-      const response = await axiosInstance.post(`/vote-posts/${post.id}/up-vote`);
+      const response = await axiosInstance.post(
+        `/vote-posts/${post.id}/up-vote`,
+      );
       if (response.status === 200) {
         setPosts((prevPosts) =>
           prevPosts.map((p) =>
@@ -106,7 +108,9 @@ const PostsByUser = () => {
 
   const handleDownVote = async (post) => {
     try {
-      const response = await axiosInstance.post(`/vote-posts/${post.id}/down-vote`);
+      const response = await axiosInstance.post(
+        `/vote-posts/${post.id}/down-vote`,
+      );
       if (response.status === 200) {
         setPosts((prevPosts) =>
           prevPosts.map((p) =>
