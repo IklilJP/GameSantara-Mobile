@@ -24,16 +24,18 @@ const theme = createTheme({
 });
 
 const store = createStore(reducers);
+
 export default function App() {
   return (
     <SafeAreaProvider>
       <Provider store={store}>
-      <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
           <NavigationContainer>
-            <DrawerNavigator/>
+            <DrawerNavigator />
           </NavigationContainer>
-        <Toast />
-      </ThemeProvider></Provider>
+          <Toast />
+        </ThemeProvider>
+      </Provider>
     </SafeAreaProvider>
   );
 }

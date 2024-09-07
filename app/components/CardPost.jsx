@@ -1,73 +1,14 @@
 import { Avatar, Card, Image } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import axiosInstance from "../service/axios";
 import { formatTime } from "../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import { handleDownVote, handleUpVote } from "../service/servicePosts";
 
 const CardPost = ({ item, setThreadList }) => {
   const navigation = useNavigation();
-
-  const handleUpVote = async (thread) => {
-    try {
-      const response = await axiosInstance.post(
-        `/vote-posts/${thread.id}/up-vote`,
-      );
-      if (response.status === 200) {
-        setThreadList((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === thread.id
-              ? {
-                  ...post,
-                  upVotesCount: thread.isUpVoted
-                    ? post.upVotesCount - 1
-                    : post.upVotesCount + 1,
-                  isUpVoted: !thread.isUpVoted,
-                  downVotesCount: thread.isDownVoted
-                    ? post.downVotesCount - 1
-                    : post.downVotesCount,
-                  isDownVoted: false,
-                }
-              : post,
-          ),
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleDownVote = async (thread) => {
-    try {
-      const response = await axiosInstance.post(
-        `/vote-posts/${thread.id}/down-vote`,
-      );
-      if (response.status === 200) {
-        setThreadList((prevPosts) =>
-          prevPosts.map((post) =>
-            post.id === thread.id
-              ? {
-                  ...post,
-                  downVotesCount: thread.isDownVoted
-                    ? post.downVotesCount - 1
-                    : post.downVotesCount + 1,
-                  isDownVoted: !thread.isDownVoted,
-                  upVotesCount: thread.isUpVoted
-                    ? post.upVotesCount - 1
-                    : post.upVotesCount,
-                  isUpVoted: false,
-                }
-              : post,
-          ),
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
   const goToDetailPost = () => {
     navigation.navigate("Details", { postId: item.id });
@@ -135,23 +76,23 @@ const CardPost = ({ item, setThreadList }) => {
           <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
             <TouchableOpacity
               className="flex-row py-1 px-3 items-center border-r border-gray-600"
-              onPress={() => handleUpVote(item)}>
+              onPress={() => handleUpVote(item, setThreadList)}>
               <MaterialCommunityIcons
                 name={
                   item.isUpVoted ? "arrow-up-bold" : "arrow-up-bold-outline"
                 }
                 size={18}
-                color={item.isUpVoted ? "tomato" : "white"}
+                color={item.isUpVoted ? "#16a34a" : "white"}
               />
               <Text
                 className={
-                  item.isUpVoted ? "text-red-600 pl-2" : "text-white pl-2"
+                  item.isUpVoted ? "text-green-600 pl-2" : "text-white pl-2"
                 }>
                 {item.upVotesCount}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => handleDownVote(item)}
+              onPress={() => handleDownVote(item, setThreadList)}
               className="flex-row py-1 px-3 items-center border-l border-gray-600">
               <MaterialCommunityIcons
                 name={
@@ -160,11 +101,11 @@ const CardPost = ({ item, setThreadList }) => {
                     : "arrow-down-bold-outline"
                 }
                 size={18}
-                color={item.isDownVoted ? "tomato" : "white"}
+                color={item.isDownVoted ? "#dc2626" : "white"}
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity className="p-1 pl-5">
+          <TouchableOpacity className="p-1 pl-5 items-center">
             <Ionicons name="chatbox-outline" size={22} color="white" />
           </TouchableOpacity>
           <Text className="text-white p-1">{item.commentsCount}</Text>

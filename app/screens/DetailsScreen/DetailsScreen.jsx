@@ -12,6 +12,7 @@ import ImageViewing from "react-native-image-viewing";
 import CommentInputDetail from "../../components/CommentInputDetail";
 import { getComment } from "../../service/commentService";
 import CardComment from "../../components/CardComment";
+import { downVoteThread, upVoteThread } from "../../service/servicePosts";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -33,53 +34,14 @@ const DetailsScreen = ({ route }) => {
 
   useEffect(() => {
     fetchDetailPost();
-    getComment(postId, setComments);
   }, []);
 
-  const handleUpVote = async () => {
-    try {
-      const response = await axiosInstance.post(
-        `/vote-posts/${threadDetail.id}/up-vote`,
-      );
-      if (response.status === 200) {
-        setThreadDetail((prevDetail) => ({
-          ...prevDetail,
-          upVotesCount: prevDetail.isUpVoted
-            ? prevDetail.upVotesCount - 1
-            : prevDetail.upVotesCount + 1,
-          isUpVoted: !prevDetail.isUpVoted,
-          downVotesCount: prevDetail.isDownVoted
-            ? prevDetail.downVotesCount - 1
-            : prevDetail.downVotesCount,
-          isDownVoted: false,
-        }));
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleUpVote = () => {
+    upVoteThread(threadDetail.id, setThreadDetail);
   };
 
-  const handleDownVote = async () => {
-    try {
-      const response = await axiosInstance.post(
-        `/vote-posts/${threadDetail.id}/down-vote`,
-      );
-      if (response.status === 200) {
-        setThreadDetail((prevDetail) => ({
-          ...prevDetail,
-          downVotesCount: prevDetail.isDownVoted
-            ? prevDetail.downVotesCount - 1
-            : prevDetail.downVotesCount + 1,
-          isDownVoted: !prevDetail.isDownVoted,
-          upVotesCount: prevDetail.isUpVoted
-            ? prevDetail.upVotesCount - 1
-            : prevDetail.upVotesCount,
-          isUpVoted: false,
-        }));
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleDownVote = () => {
+    downVoteThread(threadDetail.id, setThreadDetail);
   };
 
   const images = threadDetail.pictures?.map((image) => ({
@@ -182,7 +144,7 @@ const DetailsScreen = ({ route }) => {
             <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
               <TouchableOpacity
                 className="flex-row py-1 px-3 items-center border-r border-gray-600"
-                onPress={() => handleUpVote()}>
+                onPress={handleUpVote}>
                 <MaterialCommunityIcons
                   name={
                     threadDetail.isUpVoted
@@ -197,7 +159,7 @@ const DetailsScreen = ({ route }) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => handleDownVote()}
+                onPress={handleDownVote}
                 className="flex-row py-1 px-3 items-center border-l border-gray-600">
                 <MaterialCommunityIcons
                   name={
@@ -221,12 +183,12 @@ const DetailsScreen = ({ route }) => {
           threadDetail={threadDetail}
           isComment={isComment}
           setIsComment={setIsComment}
-          setComments={setIsComment}
+          setComments={setComments}
         />
         <CardComment
           postId={threadDetail.id}
           comments={comments}
-          setComments={setIsComment}
+          setComments={setComments}
         />
       </ScrollView>
 
