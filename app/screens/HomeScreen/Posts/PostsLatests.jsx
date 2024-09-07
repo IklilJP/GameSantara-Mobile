@@ -25,7 +25,7 @@ const PostsLatests = (props) => {
       const response = await axiosInstance.get("/post", {
         params: {
           page: page,
-          size: 4,
+          size: 10,
           q: props?.tags,
           by: "latest",
         },
@@ -63,7 +63,7 @@ const PostsLatests = (props) => {
   }, [currentPage]);
 
   if (loading && currentPage === 1) {
-    return <Text className="text-white">Loading...</Text>;
+    return <ActivityIndicator size="large" color="white" />;
   }
 
   return (

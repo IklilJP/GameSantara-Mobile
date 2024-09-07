@@ -19,7 +19,9 @@ const AddThreadScreen = () => {
   const [imageList, setImageList] = useState([]);
   const [open, setOpen] = useState(false);
   const [tagItems, setTagItems] = useState([]);
-  const user = useSelector((state) => state.loggedInUser);
+  const userLogin = useSelector(
+    (state) => state.loggedInUser.loggedInUser.data,
+  );
   const {
     control,
     handleSubmit,

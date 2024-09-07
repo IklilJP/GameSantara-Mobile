@@ -20,8 +20,10 @@ const Profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [userDetail, setUserDetail] = useState({});
   const { height } = Dimensions.get("window");
-  const user = useSelector((state) => state.loggedInUser);
-  console.log("User:", user);
+  const userLogin = useSelector(
+    (state) => state.loggedInUser.loggedInUser.data,
+  );
+  console.log("User profile:", userLogin);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -33,9 +35,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axiosInstance.get(
-        `/user/${user.loggedInUser?.data?.userId}`,
-      );
+      const response = await axiosInstance.get(`/user/${userLogin.id}`);
       setUserDetail(response.data.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -45,7 +45,7 @@ const Profile = () => {
   useEffect(() => {
     fetchUserData();
     setUserDetail(null);
-  }, [user.loggedInUser]);
+  }, [userLogin.loggedInUser]);
 
   const defaultProfile = {
     fullName: "user",
@@ -225,4 +225,3 @@ const styles = StyleSheet.create({
 });
 
 export default Profile;
-

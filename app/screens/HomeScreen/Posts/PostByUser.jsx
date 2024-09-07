@@ -68,7 +68,9 @@ const PostsByUser = () => {
 
   const handleUpVote = async (post) => {
     try {
-      const response = await axiosInstance.post(`/vote-posts/${post.id}/up-vote`);
+      const response = await axiosInstance.post(
+        `/vote-posts/${post.id}/up-vote`,
+      );
       if (response.status === 200) {
         setPosts((prevPosts) =>
           prevPosts.map((p) =>
@@ -95,7 +97,9 @@ const PostsByUser = () => {
 
   const handleDownVote = async (post) => {
     try {
-      const response = await axiosInstance.post(`/vote-posts/${post.id}/down-vote`);
+      const response = await axiosInstance.post(
+        `/vote-posts/${post.id}/down-vote`,
+      );
       if (response.status === 200) {
         setPosts((prevPosts) =>
           prevPosts.map((p) =>
@@ -142,10 +146,14 @@ const PostsByUser = () => {
                     size={32}
                     rounded
                     source={{
-                      uri: post.profilePictureUrl || "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+                      uri:
+                        post.profilePictureUrl ||
+                        "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
                     }}
                   />
-                  <View style={styles.headerText} className= "justify-center pl-2">
+                  <View
+                    style={styles.headerText}
+                    className="justify-center pl-2">
                     <View style={styles.headerInfo}>
                       <Text style={styles.username}>{post.user}</Text>
                       <Text style={styles.dot}>•</Text>
@@ -159,7 +167,10 @@ const PostsByUser = () => {
                 <View style={styles.body}>
                   <Text style={styles.title}>{post.title}</Text>
                   <View style={styles.descriptionContainer}>
-                    <Text ref={bodyRef} style={styles.description} numberOfLines={3}>
+                    <Text
+                      ref={bodyRef}
+                      style={styles.description}
+                      numberOfLines={3}>
                       {post.body}
                     </Text>
                     {isClamped && (
@@ -177,25 +188,53 @@ const PostsByUser = () => {
                   </View>
                 </View>
                 <View style={styles.footer}>
-                  <TouchableOpacity style={styles.iconButton} onPress={() => handleUpVote(post)}>
+                  <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => handleUpVote(post)}>
                     <MaterialCommunityIcons
-                      name={post.isUpVoted ? "arrow-up-bold" : 'arrow-up-bold-outline'}
+                      name={
+                        post.isUpVoted
+                          ? "arrow-up-bold"
+                          : "arrow-up-bold-outline"
+                      }
                       size={24}
-                      color={post.isUpVoted ? "tomato" : 'white'}
+                      color={post.isUpVoted ? "tomato" : "white"}
                     />
-                    <Text style={post.isUpVoted ? styles.voteCountActive : styles.voteCount}>{post.upVotesCount}</Text>
+                    <Text
+                      style={
+                        post.isUpVoted
+                          ? styles.voteCountActive
+                          : styles.voteCount
+                      }>
+                      {post.upVotesCount}
+                    </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.iconButton} onPress={() => handleDownVote(post)}>
+                  <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => handleDownVote(post)}>
                     <MaterialCommunityIcons
-                      name={post.isDownVoted ? "arrow-down-bold" : 'arrow-down-bold-outline'}
+                      name={
+                        post.isDownVoted
+                          ? "arrow-down-bold"
+                          : "arrow-down-bold-outline"
+                      }
                       size={24}
-                      color={post.isDownVoted ? "tomato" : 'white'}
+                      color={post.isDownVoted ? "tomato" : "white"}
                     />
-                    <Text style={post.isDownVoted ? styles.voteCountActive : styles.voteCount}>{post.downVotesCount}</Text>
+                    <Text
+                      style={
+                        post.isDownVoted
+                          ? styles.voteCountActive
+                          : styles.voteCount
+                      }>
+                      {post.downVotesCount}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.iconButton}>
                     <Ionicons name="chatbox-outline" size={22} color="white" />
-                    <Text style={styles.commentCount}>{post.commentsCount}</Text>
+                    <Text style={styles.commentCount}>
+                      {post.commentsCount}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </Card>
