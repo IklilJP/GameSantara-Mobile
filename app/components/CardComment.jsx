@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,26 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { getComment } from "../service/commentService";
+import {
+  downvoteComment,
+  getComment,
+  sendCommentChild,
+  upvoteComment,
+} from "../service/commentService";
 import { formatTime } from "../service/formatTime";
 import { Avatar } from "@rneui/themed";
+import { useSelector } from "react-redux";
 
 const CardComment = ({ postId, comments = [], setComments }) => {
   const [isComment, setIsComment] = useState({});
   const [contentComment, setContentComment] = useState("");
   const [openComment, setOpenComment] = useState({});
+  const userLogin = useSelector(
+    (state) => state.loggedInUser.loggedInUser.data,
+  );
+  const textInputRef = useRef(null);
+  const [isFocused, setIsFocused] = useState(false);
+  console.log("user Comment : ", userLogin);
 
   useEffect(() => {
     getComment(postId, setComments);
@@ -58,7 +70,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
       <View
         key={comment.id}
         style={{ marginLeft: level * 20 }}
-        className="border-l border-l-colorBorder rounded-xl mt-5">
+        className={`rounded-xl mt-5 ${comment.childCommentsCount ? " border-l border-l-colorBorder" : "border-none"}`}>
         <View className="flex-row">
           <Avatar
             source={{
@@ -122,7 +134,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-row gap-2 items-center"
+              className="flex-row items-center"
               onPress={() =>
                 setIsComment((prevState) => ({
                   ...prevState,
@@ -130,7 +142,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
                 }))
               }>
               <Icon name="chatbox-outline" size={20} color="#a6adbb" />
-              <Text className="text-[#a6adbb] font-bold">Reply</Text>
+              <Text className="text-[#a6adbb] font-bold ml-1">Reply</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -150,11 +162,21 @@ const CardComment = ({ postId, comments = [], setComments }) => {
         </View>
 
         {isComment[comment.id] && (
-          <View style={styles.replyContainer}>
+          <View
+            className={`p-2 rounded-xl border my-2 ${isFocused ? "border-[#fff]" : "border-colorBorder"} mx-5`}>
             <TextInput
               value={contentComment}
-              onChangeText={setContentComment}
-              style={styles.textInput}
+              multiline={true}
+              numberOfLines={5}
+              onChangeText={(e) => setContentComment(e.trim())}
+              ref={textInputRef}
+              className="text-[#fff]"
+              style={{
+                height: 50,
+                textAlignVertical: "top",
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               placeholderTextColor="gray"
             />
             <View style={styles.replyButtons}>
@@ -178,6 +200,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
                     setComments,
                     userLogin,
                   );
+                  setContentComment("");
                   setIsComment((prevState) => ({
                     ...prevState,
                     [comment.id]: false,

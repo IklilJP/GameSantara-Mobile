@@ -38,10 +38,11 @@ const Header = () => {
   const checkLoginUser = async () => {
     try {
       const loggedInUser = await AsyncStorage.getItem("loggedInUser");
+      const responseUserDetail = await axiosInstance.get("/user");
       if (loggedInUser) {
         dispatch({
           type: "LOGIN",
-          payload: JSON.parse(loggedInUser),
+          payload: responseUserDetail.data,
         });
       }
     } catch (error) {
@@ -91,9 +92,13 @@ const Header = () => {
         password: data.password,
       });
       await AsyncStorage.setItem("loggedInUser", JSON.stringify(response.data));
+
+      const responseUserDetail = await axiosInstance.get("/user");
+      console.log("response User Detail", responseUserDetail.data);
+
       dispatch({
         type: "LOGIN",
-        payload: response.data,
+        payload: responseUserDetail.data,
       });
       setModalLoginVisible(false);
     } catch (error) {
@@ -128,20 +133,17 @@ const Header = () => {
         fullName: data.fullName,
         email: data.email,
       });
-
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   return (
     <View
       className="w-full h-[7%] justify-center"
-      style={{ backgroundColor: "#1d232a" }}
-    >
+      style={{ backgroundColor: "#1d232a" }}>
       <View className="flex-row items-center pl-2">
         <View className="flex-row items-center">
-          <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+          <TouchableOpacity
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
             <Ionicons name="menu" size={26} color="white" />
           </TouchableOpacity>
           <Image
@@ -162,8 +164,7 @@ const Header = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={closeModal}
-      >
+        onRequestClose={closeModal}>
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.modalBackdrop}>
             <View style={[styles.modalContainer, { height: height / 4 }]}>
@@ -205,8 +206,7 @@ const Header = () => {
               />
               <TouchableOpacity
                 className="p-2"
-                onPress={() => alert("Option 2")}
-              >
+                onPress={() => alert("Option 2")}>
                 <View className="flex-row items-center">
                   <Ionicons name="settings-outline" size={24} color="white" />
                   <Text className="pl-5 text-white">Pengaturan</Text>
@@ -220,18 +220,15 @@ const Header = () => {
         animationType="slide"
         transparent={true}
         visible={modalLoginVisible}
-        onRequestClose={closeModalLogin}
-      >
+        onRequestClose={closeModalLogin}>
         <ImageBackground
           className="flex-1 justify-center"
           source={{
             uri: "https://img.freepik.com/premium-photo/cyberpunk-gaming-controller-gamepad-joystick-illustration_691560-5812.jpg",
-          }}
-        >
+          }}>
           <View
             className="flex-1 mx-8 my-20"
-            style={{ backgroundColor: "#1d232a" }}
-          >
+            style={{ backgroundColor: "#1d232a" }}>
             <View className="flex-row p-5">
               <TouchableOpacity onPress={closeModalLogin}>
                 <Ionicons name="close" size={30} color="grey" />
@@ -242,8 +239,7 @@ const Header = () => {
               className="flex-1 items-center p-10 justify-center"
               style={{
                 backgroundColor: "#1d232a",
-              }}
-            >
+              }}>
               <Text className="font-extrabold text-red-600 mb-5 text-3xl">
                 Log in
               </Text>
@@ -332,8 +328,7 @@ const Header = () => {
                   backgroundColor: "#dc2626",
                   borderRadius: 5,
                 }}
-                onPress={handleSubmit(handleSubmitLogin)}
-              >
+                onPress={handleSubmit(handleSubmitLogin)}>
                 <Text className="text-white text-lg font-bold">Login</Text>
               </TouchableOpacity>
               <View className="mt-5 items-center">
@@ -345,8 +340,7 @@ const Header = () => {
                     className="text-base font-bold mt-1"
                     style={{
                       color: "#dc2626",
-                    }}
-                  >
+                    }}>
                     Daftar
                   </Text>
                 </TouchableOpacity>
@@ -359,14 +353,12 @@ const Header = () => {
         animationType="slide"
         transparent={true}
         visible={modalRegisterVisible}
-        onRequestClose={closeModalRegister}
-      >
+        onRequestClose={closeModalRegister}>
         <ImageBackground
           className="flex-1 justify-center"
           source={{
             uri: "https://img.freepik.com/premium-photo/cyberpunk-gaming-controller-gamepad-joystick-illustration_691560-5800.jpg",
-          }}
-        >
+          }}>
           <ScrollView className="flex-1 mx-8 my-20">
             <View className="flex-1" style={{ backgroundColor: "#1d232a" }}>
               <View className="flex-row p-5">
@@ -378,8 +370,7 @@ const Header = () => {
                 className="flex-1 items-center px-10"
                 style={{
                   backgroundColor: "#1d232a",
-                }}
-              >
+                }}>
                 <Text className="font-extrabold text-red-600 mb-5 text-3xl">
                   Daftar
                 </Text>
@@ -597,8 +588,7 @@ const Header = () => {
                     backgroundColor: "#dc2626",
                     borderRadius: 5,
                   }}
-                  onPress={handleSubmit(handleSubmitRegister)}
-                >
+                  onPress={handleSubmit(handleSubmitRegister)}>
                   <Text className="text-white text-lg font-bold">Daftar</Text>
                 </TouchableOpacity>
                 <View className="mt-1 mb-5 items-center">
@@ -610,8 +600,7 @@ const Header = () => {
                       className="text-base font-bold mt-1"
                       style={{
                         color: "#dc2626",
-                      }}
-                    >
+                      }}>
                       Login
                     </Text>
                   </TouchableOpacity>

@@ -13,8 +13,9 @@ const CommentInputDetail = ({
   const [contentComment, setContentComment] = useState("");
   const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
-  const user = useSelector((state) => state.loggedInUser);
-  console.log(user);
+  const userLogin = useSelector(
+    (state) => state.loggedInUser.loggedInUser.data,
+  );
 
   const handleSendComment = () => {
     if (!contentComment.trim()) {
@@ -22,7 +23,7 @@ const CommentInputDetail = ({
       return;
     }
 
-    sendComment(threadDetail.id, contentComment, null, setComments, user);
+    sendComment(threadDetail.id, contentComment, null, setComments, userLogin);
 
     setContentComment("");
     setIsComment(false);
