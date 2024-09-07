@@ -96,7 +96,9 @@ const CardComment = ({ postId, comments = [], setComments }) => {
                 size={20}
                 color={comment.isUpVoted ? "#16a34a" : "#a6adbb"}
               />
-              <Text style={styles.voteCount}>{comment.upVotesCount}</Text>
+              <Text className="text-[#a6adbb] font-bold ml-1">
+                {comment.upVotesCount}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -120,7 +122,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-row gap-1 items-center"
+              className="flex-row gap-2 items-center"
               onPress={() =>
                 setIsComment((prevState) => ({
                   ...prevState,
@@ -128,7 +130,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
                 }))
               }>
               <Icon name="chatbox-outline" size={20} color="#a6adbb" />
-              <Text className="text-[#a6adbb]">Reply</Text>
+              <Text className="text-[#a6adbb] font-bold">Reply</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -152,7 +154,6 @@ const CardComment = ({ postId, comments = [], setComments }) => {
             <TextInput
               value={contentComment}
               onChangeText={setContentComment}
-              placeholder="Type your reply"
               style={styles.textInput}
               placeholderTextColor="gray"
             />

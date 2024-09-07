@@ -1,11 +1,32 @@
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useRef, useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { sendComment } from "../service/commentService";
 
-const CommentInputDetail = ({ isComment, setIsComment }) => {
+const CommentInputDetail = ({
+  threadDetail,
+  isComment,
+  setIsComment,
+  setComments,
+}) => {
   const [contentComment, setContentComment] = useState("");
   const textInputRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
+  const user = useSelector((state) => state.loggedInUser);
+  console.log(user);
+
+  const handleSendComment = () => {
+    if (!contentComment.trim()) {
+      console.log("Tolong isi komen");
+      return;
+    }
+
+    sendComment(threadDetail.id, contentComment, null, setComments, user);
+
+    setContentComment("");
+    setIsComment(false);
+  };
 
   useEffect(() => {
     textInputRef.current?.focus();
@@ -26,7 +47,7 @@ const CommentInputDetail = ({ isComment, setIsComment }) => {
           <TextInput
             multiline={true}
             numberOfLines={10}
-            onChangeText={(e) => setContentComment(e)}
+            onChangeText={(e) => setContentComment(e.trim())}
             value={contentComment}
             ref={textInputRef}
             className="text-[#fff]"
@@ -40,7 +61,9 @@ const CommentInputDetail = ({ isComment, setIsComment }) => {
               onPress={() => setIsComment(false)}>
               <Text className="text-[#fff]">Batal</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="bg-blue-600 py-1 px-2 rounded-lg">
+            <TouchableOpacity
+              className="bg-blue-600 py-1 px-2 rounded-lg"
+              onPress={handleSendComment}>
               <Text className="text-[#fff]">Kirim</Text>
             </TouchableOpacity>
           </View>

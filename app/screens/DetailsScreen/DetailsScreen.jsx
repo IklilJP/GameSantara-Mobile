@@ -217,7 +217,12 @@ const DetailsScreen = ({ route }) => {
           </View>
         </View>
 
-        <CommentInputDetail isComment={isComment} setIsComment={setIsComment} />
+        <CommentInputDetail
+          threadDetail={threadDetail}
+          isComment={isComment}
+          setIsComment={setIsComment}
+          setComments={setIsComment}
+        />
         <CardComment
           postId={threadDetail.id}
           comments={comments}
