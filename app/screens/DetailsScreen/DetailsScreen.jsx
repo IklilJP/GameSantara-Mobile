@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
 import { Avatar } from "@rneui/themed";
@@ -16,16 +9,18 @@ import axiosInstance from "../../service/axios";
 import { formatTime } from "../../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewing from "react-native-image-viewing";
-import CommentDetail from "../../components/CommentDetail";
+import CommentInputDetail from "../../components/CommentInputDetail";
+import { getComment } from "../../service/commentService";
+import CardComment from "../../components/CardComment";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
   const [threadDetail, setThreadDetail] = useState({});
   const navigation = useNavigation();
   const [isComment, setIsComment] = useState(false);
-
   const [isVisible, setIsVisible] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
+  const [comments, setComments] = useState([]);
 
   const fetchDetailPost = async () => {
     try {
@@ -38,6 +33,7 @@ const DetailsScreen = ({ route }) => {
 
   useEffect(() => {
     fetchDetailPost();
+    getComment(postId, setComments);
   }, []);
 
   const handleUpVote = async () => {
@@ -92,12 +88,13 @@ const DetailsScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View className="flex-row gap-2 items-center py-4 px-2 border-b border-b-black bg-[#1d232a]">
+      <View className="flex-row items-center py-4 px-2 border-b border-b-black bg-[#1d232a]">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={24} color="#d1d5db" />
         </TouchableOpacity>
-        <Text className="text-gray-300 font-bold text-lg">Thread</Text>
+        <Text className="text-gray-300 font-bold text-lg ml-2">Thread</Text>
       </View>
+
       <ScrollView
         className="bg-[#1d232a] flex-1 min-h-screen"
         contentContainerStyle={{ paddingBottom: 100 }}>
@@ -211,9 +208,6 @@ const DetailsScreen = ({ route }) => {
                   size={20}
                   color={threadDetail.isDownVoted ? "#dc2626" : "white"}
                 />
-                <Text className={"text-white pl-2"}>
-                  {threadDetail.downVotesCount}
-                </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity className="p-1 pl-5">
@@ -223,7 +217,17 @@ const DetailsScreen = ({ route }) => {
           </View>
         </View>
 
-        <CommentDetail isComment={isComment} setIsComment={setIsComment} />
+        <CommentInputDetail
+          threadDetail={threadDetail}
+          isComment={isComment}
+          setIsComment={setIsComment}
+          setComments={setIsComment}
+        />
+        <CardComment
+          postId={threadDetail.id}
+          comments={comments}
+          setComments={setIsComment}
+        />
       </ScrollView>
 
       <ImageViewing

@@ -162,12 +162,6 @@ const CardPost = ({ item, setThreadList }) => {
                 size={18}
                 color={item.isDownVoted ? "tomato" : "white"}
               />
-              <Text
-                className={
-                  item.isDownVoted ? "text-red-600 pl-2" : "text-white pl-2"
-                }>
-                {item.downVotesCount}
-              </Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity className="p-1 pl-5">
