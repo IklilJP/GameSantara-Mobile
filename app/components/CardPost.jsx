@@ -82,11 +82,13 @@ const CardPost = ({ item, setThreadList }) => {
                   item.isUpVoted ? "arrow-up-bold" : "arrow-up-bold-outline"
                 }
                 size={18}
-                color={item.isUpVoted ? "#16a34a" : "white"}
+                color={item.isUpVoted ? "#16a34a" : "#a6adbb"}
               />
               <Text
                 className={
-                  item.isUpVoted ? "text-green-600 pl-2" : "text-white pl-2"
+                  item.isUpVoted
+                    ? "text-green-600 pl-2 font-bold"
+                    : "text-white pl-2 font-bold"
                 }>
                 {item.upVotesCount}
               </Text>
@@ -101,14 +103,18 @@ const CardPost = ({ item, setThreadList }) => {
                     : "arrow-down-bold-outline"
                 }
                 size={18}
-                color={item.isDownVoted ? "#dc2626" : "white"}
+                color={item.isDownVoted ? "#dc2626" : "#a6adbb"}
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity className="p-1 pl-5 items-center">
-            <Ionicons name="chatbox-outline" size={22} color="white" />
+          <TouchableOpacity
+            className="p-1 pl-5 items-center flex-row"
+            onPress={goToDetailPost}>
+            <Ionicons name="chatbox-outline" size={22} color="#a6adbb" />
+            <Text className="text-white p-1 ml-1 font-bold">
+              {item.commentsCount}
+            </Text>
           </TouchableOpacity>
-          <Text className="text-white p-1">{item.commentsCount}</Text>
         </View>
       </Card>
     </TouchableOpacity>
