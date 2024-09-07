@@ -69,7 +69,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
     return commentsList.map((comment) => (
       <View
         key={comment.id}
-        style={{ marginLeft: level * 20 }}
+        style={{ marginLeft: level * 10 }}
         className={`rounded-xl mt-5 ${comment.childCommentsCount ? " border-l border-l-colorBorder" : "border-none"}`}>
         <View className="flex-row">
           <Avatar
@@ -179,9 +179,9 @@ const CardComment = ({ postId, comments = [], setComments }) => {
               onBlur={() => setIsFocused(false)}
               placeholderTextColor="gray"
             />
-            <View style={styles.replyButtons}>
+            <View className="flex-row justify-end mt-3 gap-2">
               <TouchableOpacity
-                style={styles.cancelButton}
+                className="py-1 px-2 rounded-lg bg-red-600"
                 onPress={() =>
                   setIsComment((prevState) => ({
                     ...prevState,
@@ -191,6 +191,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
+                className="bg-blue-600 py-1 px-2 rounded-lg"
                 style={styles.sendButton}
                 onPress={() => {
                   sendCommentChild(

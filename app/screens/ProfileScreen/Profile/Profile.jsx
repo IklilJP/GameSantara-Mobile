@@ -89,7 +89,6 @@ const Profile = () => {
             </View>
             <View className="flex-1 w-full justify-center items-center">
               <TouchableOpacity style={styles.menuButton} onPress={openModal}>
-                {/* <Ionicons name="ellipsis-horizontal" size={24} color="white" /> */}
                 <FontAwesome name="edit" size={15} color={"white"} />
                 <Text className="text-white text-xs text-center">
                   Edit Profile

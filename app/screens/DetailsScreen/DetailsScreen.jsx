@@ -10,9 +10,9 @@ import { formatTime } from "../../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewing from "react-native-image-viewing";
 import CommentInputDetail from "../../components/CommentInputDetail";
-import { getComment } from "../../service/commentService";
 import CardComment from "../../components/CardComment";
 import { downVoteThread, upVoteThread } from "../../service/servicePosts";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -57,140 +57,158 @@ const DetailsScreen = ({ route }) => {
         <Text className="text-gray-300 font-bold text-lg ml-2">Thread</Text>
       </View>
 
-      <ScrollView
-        className="bg-[#1d232a] flex-1 min-h-screen"
-        contentContainerStyle={{ paddingBottom: 100 }}>
-        <View className="flex-1 px-2 w-full">
-          <View className="flex-row items-center my-2" style={{ gap: 10 }}>
-            <Avatar
-              size={38}
-              rounded
-              source={{
-                uri:
-                  threadDetail.profilePictureUrl ||
-                  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-              }}
-            />
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          className="bg-[#1d232a] flex-1 min-h-screen"
+          contentContainerStyle={{ paddingBottom: 100 }}>
+          <View className="flex-1 px-2 w-full">
+            <View className="flex-row items-center my-2" style={{ gap: 10 }}>
+              <Avatar
+                size={38}
+                rounded
+                source={{
+                  uri:
+                    threadDetail.profilePictureUrl ||
+                    "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+                }}
+              />
 
-            <View>
-              <View className="flex-row items-center" style={{ gap: 7 }}>
-                <Text className="text-gray-300 font-bold">
-                  {threadDetail.user}
-                </Text>
-                <Text className="text-gray-300 text-xl">&bull;</Text>
-                <Text className="text-red-600 font-bold">
-                  {threadDetail.tagName}
+              <View>
+                <View className="flex-row items-center" style={{ gap: 7 }}>
+                  <Text className="text-gray-300 font-bold">
+                    {threadDetail.user}
+                  </Text>
+                  <Text className="text-gray-300 text-xl">&bull;</Text>
+                  <Text className="text-red-600 font-bold">
+                    {threadDetail.tagName}
+                  </Text>
+                </View>
+                <Text className="text-gray-300">
+                  {formatTime(threadDetail.createAt)}
                 </Text>
               </View>
-              <Text className="text-gray-300">
-                {formatTime(threadDetail.createAt)}
+            </View>
+
+            <View className="mt-2">
+              <Text
+                className="text-gray-300 font-bold mb-1"
+                style={{ fontSize: 18 }}>
+                {threadDetail.title}
+              </Text>
+
+              <Text className="text-gray-300 leading-5">
+                {threadDetail.body}
+              </Text>
+            </View>
+
+            <View className="my-1">
+              {threadDetail.pictures?.length === 1 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setImageIndex(0);
+                    setIsVisible(true);
+                  }}
+                  className="shadow-xl bg-black rounded-lg w-[100%]"
+                  style={{ aspectRatio: 1 }}>
+                  <Image
+                    source={{ uri: threadDetail.pictures[0].imageUrl }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 8,
+                      marginTop: 10,
+                    }}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              ) : (
+                <View className="flex-row flex-wrap justify-between">
+                  {threadDetail.pictures?.map((image, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setImageIndex(index);
+                        setIsVisible(true);
+                      }}
+                      className="shadow-xl bg-black rounded-lg"
+                      style={{
+                        width: "48%",
+                        aspectRatio: 1,
+                        marginBottom: 10,
+                      }}>
+                      <Image
+                        source={{ uri: image.imageUrl }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 8,
+                        }}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            <View className="flex-row items-center my-5">
+              <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
+                <TouchableOpacity
+                  className="flex-row py-1 px-3 items-center border-r border-gray-600"
+                  onPress={handleUpVote}>
+                  <MaterialCommunityIcons
+                    name={
+                      threadDetail.isUpVoted
+                        ? "arrow-up-bold"
+                        : "arrow-up-bold-outline"
+                    }
+                    size={20}
+                    color={threadDetail.isUpVoted ? "#16a34a" : "white"}
+                  />
+                  <Text className={"text-white pl-2"}>
+                    {threadDetail.upVotesCount}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleDownVote}
+                  className="flex-row py-1 px-3 items-center border-l border-gray-600">
+                  <MaterialCommunityIcons
+                    name={
+                      threadDetail.isDownVoted
+                        ? "arrow-down-bold"
+                        : "arrow-down-bold-outline"
+                    }
+                    size={20}
+                    color={threadDetail.isDownVoted ? "#dc2626" : "white"}
+                  />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                className="p-1 pl-5"
+                onPress={() => setIsComment(!isComment)}>
+                <Ionicons name="chatbox-outline" size={22} color="white" />
+              </TouchableOpacity>
+              <Text className="text-white p-1">
+                {threadDetail.commentsCount}
               </Text>
             </View>
           </View>
 
-          <View className="mt-2">
-            <Text
-              className="text-gray-300 font-bold mb-1"
-              style={{ fontSize: 18 }}>
-              {threadDetail.title}
-            </Text>
-
-            <Text className="text-gray-300 leading-5">{threadDetail.body}</Text>
-          </View>
-
-          <View className="my-1">
-            {threadDetail.pictures?.length === 1 ? (
-              <TouchableOpacity
-                onPress={() => {
-                  setImageIndex(0);
-                  setIsVisible(true);
-                }}
-                className="shadow-xl bg-black rounded-lg w-[100%]"
-                style={{ aspectRatio: 1 }}>
-                <Image
-                  source={{ uri: threadDetail.pictures[0].imageUrl }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 8,
-                    marginTop: 10,
-                  }}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
-            ) : (
-              <View className="flex-row flex-wrap justify-between">
-                {threadDetail.pictures?.map((image, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setImageIndex(index);
-                      setIsVisible(true);
-                    }}
-                    className="shadow-xl bg-black rounded-lg"
-                    style={{ width: "48%", aspectRatio: 1, marginBottom: 10 }}>
-                    <Image
-                      source={{ uri: image.imageUrl }}
-                      style={{ width: "100%", height: "100%", borderRadius: 8 }}
-                      resizeMode="cover"
-                    />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-          </View>
-
-          <View className="flex-row items-center my-5">
-            <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
-              <TouchableOpacity
-                className="flex-row py-1 px-3 items-center border-r border-gray-600"
-                onPress={handleUpVote}>
-                <MaterialCommunityIcons
-                  name={
-                    threadDetail.isUpVoted
-                      ? "arrow-up-bold"
-                      : "arrow-up-bold-outline"
-                  }
-                  size={20}
-                  color={threadDetail.isUpVoted ? "#16a34a" : "white"}
-                />
-                <Text className={"text-white pl-2"}>
-                  {threadDetail.upVotesCount}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleDownVote}
-                className="flex-row py-1 px-3 items-center border-l border-gray-600">
-                <MaterialCommunityIcons
-                  name={
-                    threadDetail.isDownVoted
-                      ? "arrow-down-bold"
-                      : "arrow-down-bold-outline"
-                  }
-                  size={20}
-                  color={threadDetail.isDownVoted ? "#dc2626" : "white"}
-                />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity className="p-1 pl-5">
-              <Ionicons name="chatbox-outline" size={22} color="white" />
-            </TouchableOpacity>
-            <Text className="text-white p-1">{threadDetail.commentsCount}</Text>
-          </View>
-        </View>
-
-        <CommentInputDetail
-          threadDetail={threadDetail}
-          isComment={isComment}
-          setIsComment={setIsComment}
-          setComments={setComments}
-        />
-        <CardComment
-          postId={threadDetail.id}
-          comments={comments}
-          setComments={setComments}
-        />
-      </ScrollView>
+          <CommentInputDetail
+            threadDetail={threadDetail}
+            isComment={isComment}
+            setIsComment={setIsComment}
+            setComments={setComments}
+          />
+          <CardComment
+            postId={threadDetail.id}
+            comments={comments}
+            setComments={setComments}
+          />
+        </ScrollView>
+      </KeyboardAwareScrollView>
 
       <ImageViewing
         images={images}

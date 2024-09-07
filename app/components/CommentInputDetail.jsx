@@ -1,8 +1,17 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useRef, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useSelector } from "react-redux";
 import { sendComment } from "../service/commentService";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const CommentInputDetail = ({
   threadDetail,
@@ -34,7 +43,7 @@ const CommentInputDetail = ({
   }, [isComment]);
 
   return (
-    <View className="px-4">
+    <View className="px-4" style={{ flex: 1 }}>
       {!isComment ? (
         <TouchableOpacity
           className="flex-row justify-center items-center border border-colorBorder rounded-3xl py-2"
