@@ -160,7 +160,7 @@ const Header = () => {
     <View
       className="w-full h-[7%] justify-center"
       style={{ backgroundColor: "#1d232a" }}>
-      <View className="flex-row items-center pl-2">
+      <View className="flex-row items-center justify-between px-2">
         <View className="flex-row items-center">
           <TouchableOpacity
             onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
@@ -168,9 +168,9 @@ const Header = () => {
           </TouchableOpacity>
           <Image
             source={{
-              uri: "https://res.cloudinary.com/dtmtphyux/image/upload/v1724742013/gamesantara-logo.png",
+              uri: "https://res.cloudinary.com/dpofjmzdu/image/upload/v1725716658/logo-header-mobile.png",
             }}
-            style={{ width: 140, height: 80 }}
+            style={{ width: 30, height: 30 }}
           />
         </View>
         <View className="flex-row w-[55%] justify-end items-end gap-2">
