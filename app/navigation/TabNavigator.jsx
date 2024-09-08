@@ -10,6 +10,7 @@ const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   const user = useSelector((state) => state.loggedInUser.loggedInUser.data);
+  const userId = user?.id;
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -40,10 +41,15 @@ function TabNavigator() {
       })}>
       <Tab.Screen name="Homes" component={HomeScreen} />
       {user && <Tab.Screen name="AddThread" component={AddThreadScreen} />}
-      {user && <Tab.Screen name="Profile" component={ProfileScreen} />}
+      {user && (
+        <Tab.Screen
+          name="Profile"
+          initialParams={{ userId }}
+          component={ProfileScreen}
+        />
+      )}
     </Tab.Navigator>
   );
 }
 
 export default TabNavigator;
-

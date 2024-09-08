@@ -1,4 +1,5 @@
 import { Avatar, Card } from "@rneui/themed";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -10,13 +11,13 @@ import {
 import axiosInstance from "../../../service/axios";
 import CardPost from "../../../components/CardPost";
 
-const PostsLatests = (props) => {
+const PostByUserVote = ({ userId }) => {
   const [threadListLatest, setThreadListLatest] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); // Added state for refreshing
 
   const getPostData = async (page = 1) => {
     if (!hasMore) return;
@@ -32,8 +33,8 @@ const PostsLatests = (props) => {
         params: {
           page: page,
           size: 10,
-          q: props?.tags,
-          by: "latest",
+          by: "user-upvote",
+          userId: userId,
         },
       });
 
@@ -98,11 +99,21 @@ const PostsLatests = (props) => {
           onEndReachedThreshold={0.5}
           refreshing={refreshing} // Bind the refreshing state
           onRefresh={handleRefresh} // Bind the refresh handler
-          ListFooterComponent={() =>
-            loadingMore ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : null
-          }
+          ListFooterComponent={() => (
+            <>
+              {loadingMore && (
+                <ActivityIndicator size="large" color="#ffffff" />
+              )}
+              {!hasMore && (
+                <View style={{ alignItems: "center", marginTop: 20 }}>
+                  <MaterialIcons name="scuba-diving" size={24} color="red" />
+                  <Text className="text-center text-white">
+                    Kamu menyelam terlalu dalam. Sudah tidak ada thread lagi
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
         />
       </View>
     </View>
@@ -111,4 +122,4 @@ const PostsLatests = (props) => {
 
 const styles = StyleSheet.create({});
 
-export default PostsLatests;
+export default PostByUserVote;

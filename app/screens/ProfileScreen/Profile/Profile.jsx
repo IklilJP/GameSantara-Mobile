@@ -15,7 +15,7 @@ import axiosInstance from "../../../service/axios";
 import { useSelector } from "react-redux";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-const Profile = () => {
+const Profile = ({ userId }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [userDetail, setUserDetail] = useState({});
@@ -23,7 +23,6 @@ const Profile = () => {
   const userLogin = useSelector(
     (state) => state.loggedInUser.loggedInUser.data,
   );
-  console.log("User profile:", userLogin);
 
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
@@ -35,7 +34,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axiosInstance.get(`/user/${userLogin.id}`);
+      const response = await axiosInstance.get(`/user/${userId}`);
       setUserDetail(response.data.data);
     } catch (error) {
       console.error("Failed to fetch user data:", error);
@@ -77,26 +76,24 @@ const Profile = () => {
           <View className="flex-col items-center justify-center pt-5 gap-4 flex-1">
             <View style={styles.statsContainer}>
               <View style={styles.stat}>
-                <Text style={styles.statValue}>212</Text>
-                <Text style={styles.statLabel}>pos</Text>
+                <Text style={styles.statValue}>{userDetail?.postsCount}</Text>
+                <Text style={styles.statLabel}>thread</Text>
               </View>
               <View style={styles.stat}>
-                <Text style={styles.statValue}>111</Text>
-                <Text style={styles.statLabel}>reputasi</Text>
-              </View>
-              <View style={styles.stat}>
-                <Text style={styles.statValue}>99</Text>
-                <Text style={styles.statLabel}>award</Text>
+                <Text style={styles.statValue}>{userDetail?.upVotesCount}</Text>
+                <Text style={styles.statLabel}>upvote</Text>
               </View>
             </View>
-            <View className="flex-1 w-full justify-center items-center">
-              <TouchableOpacity style={styles.menuButton} onPress={openModal}>
-                <FontAwesome name="edit" size={15} color={"white"} />
-                <Text className="text-white text-xs text-center">
-                  Edit Profile
-                </Text>
-              </TouchableOpacity>
-            </View>
+            {userId === userDetail.id && (
+              <View className="flex-1 w-full justify-center items-center">
+                <TouchableOpacity style={styles.menuButton} onPress={openModal}>
+                  <FontAwesome name="edit" size={15} color={"white"} />
+                  <Text className="text-white text-xs text-center">
+                    Edit Profile
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
         <View style={styles.profileDetails}>

@@ -78,7 +78,13 @@ const EditProfileScreen = () => {
           },
         },
       );
-      console.log("Upload successful", response.data);
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } catch (error) {
       ToastAndroid.showWithGravityAndOffset(
         error.response.data.message,
@@ -103,11 +109,22 @@ const EditProfileScreen = () => {
       const response = await axiosInstance.patch("/user/username", {
         username,
       });
-      if (response.data.status === 200) {
-        setUsernameError("Username berhasil diperbarui");
-      }
+
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } catch (error) {
-      setUsernameError(error.message);
+      ToastAndroid.showWithGravityAndOffset(
+        error.response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } finally {
       setIsLoadingUsername(false);
     }
@@ -124,11 +141,22 @@ const EditProfileScreen = () => {
       const response = await axiosInstance.patch("/user/fullname", {
         fullName,
       });
-      if (response.data.status === 200) {
-        setFullNameError("FullName berhasil diperbarui");
-      }
+
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } catch (error) {
-      setFullNameError(error.message);
+      ToastAndroid.showWithGravityAndOffset(
+        error.response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } finally {
       setIsLoadingUsername(false);
     }
@@ -143,11 +171,21 @@ const EditProfileScreen = () => {
     setIsLoadingBio(true);
     try {
       const response = await axiosInstance.patch("/user/bio", { bio });
-      if (response.data.status === 200) {
-        setBioError("Bio berhasil diperbarui");
-      }
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } catch (error) {
-      setBioError(error.message);
+      ToastAndroid.showWithGravityAndOffset(
+        error.response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
     } finally {
       setIsLoadingBio(false);
     }
@@ -254,7 +292,7 @@ const EditProfileScreen = () => {
                     placeholder="Username"
                     placeholderTextColor="#888"
                     keyboardType="default"
-                    autoCapitalize="words"
+                    autoCapitalize="none"
                     onChangeText={(text) => {
                       onChange(text);
                       setUsername(text);
@@ -265,11 +303,6 @@ const EditProfileScreen = () => {
                   {errors.username && (
                     <Text className="text-red-500 justify-start">
                       {errors.username.message}
-                    </Text>
-                  )}
-                  {usernameError && (
-                    <Text className="text-red-500 justify-start">
-                      {usernameError}
                     </Text>
                   )}
                 </View>
@@ -477,4 +510,3 @@ const styles = StyleSheet.create({
 });
 
 export default EditProfileScreen;
-

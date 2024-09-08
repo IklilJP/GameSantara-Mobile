@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, Text, ActivityIndicator } from "react-native";
+import {
+  FlatList,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import axiosInstance from "../../../service/axios";
 import CardPost from "../../../components/CardPost";
 
@@ -9,11 +14,17 @@ const Posts = (props) => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getPostData = async (page = 1) => {
+    if (!hasMore && page !== 1) return;
+
     try {
-      if (page === 1) setLoading(true);
-      else setLoadingMore(true);
+      if (page === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
 
       const response = await axiosInstance.get("/post", {
         params: {
@@ -23,12 +34,8 @@ const Posts = (props) => {
         },
       });
 
-      console.log("Fetched data:", response.data);
-
       const newPosts = response.data.data;
       const paging = response.data.paging;
-      console.log(paging);
-      console.log(newPosts);
 
       setThreadList((prevPosts) =>
         page === 1 ? newPosts : [...prevPosts, ...newPosts],
@@ -36,18 +43,28 @@ const Posts = (props) => {
 
       setHasMore(paging.hasNext);
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.status === 404) {
+        setHasMore(false);
+      } else {
+        console.log(error);
+      }
     } finally {
       setLoading(false);
       setLoadingMore(false);
+      setRefreshing(false);
     }
   };
 
   const loadMorePosts = () => {
     if (!loadingMore && hasMore) {
-      console.log("Loading more posts...");
       setCurrentPage((prevPage) => prevPage + 1);
     }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setCurrentPage(1);
+    getPostData(1);
   };
 
   useEffect(() => {
@@ -70,6 +87,13 @@ const Posts = (props) => {
         onEndReachedThreshold={0.5}
         ListFooterComponent={() =>
           loadingMore ? <ActivityIndicator size="large" color="white" /> : null
+        }
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["white"]}
+          />
         }
       />
     </View>

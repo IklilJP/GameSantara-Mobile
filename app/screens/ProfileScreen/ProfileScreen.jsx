@@ -15,13 +15,15 @@ import Collapsible from "react-native-collapsible";
 
 const { height } = Dimensions.get("window");
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ route }) => {
+  const { userId } = route.params;
+
   return (
     <SafeAreaView className="flex-1 bg-black">
       <View className="flex-1 bg-black">
         <Header />
-        <Profile />
-        <TabProfile />
+        <Profile userId={userId} />
+        <TabProfile userId={userId} />
       </View>
     </SafeAreaView>
   );
