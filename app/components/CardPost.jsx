@@ -1,17 +1,46 @@
 import { Avatar, Card, Image } from "@rneui/themed";
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { formatTime } from "../service/formatTime";
 import { useNavigation } from "@react-navigation/native";
 import { handleDownVote, handleUpVote } from "../service/servicePosts";
+import Entypo from "@expo/vector-icons/Entypo";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
+import axiosInstance from "../service/axios";
+import { useSelector } from "react-redux";
 
 const CardPost = ({ item, setThreadList }) => {
   const navigation = useNavigation();
+  const [modalDeleteThread, setModalDeleteThread] = useState(false);
+  const userLogin = useSelector(
+    (state) => state.loggedInUser.loggedInUser.data,
+  );
 
   const goToDetailPost = () => {
     navigation.navigate("Details", { postId: item.id });
+  };
+
+  const handleDeletePost = async (id) => {
+    try {
+      const response = await axiosInstance.delete(`/post/${id}`);
+      if (response.data.status === 200) {
+        setThreadList((prevPosts) =>
+          prevPosts.filter((post) => post.id !== id),
+        );
+        setModalDeleteThread(false);
+        ToastAndroid.showWithGravityAndOffset(
+          "Thread berhasil dihapus",
+          ToastAndroid.LONG,
+          ToastAndroid.TOP,
+          25,
+          50,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -23,27 +52,46 @@ const CardPost = ({ item, setThreadList }) => {
           backgroundColor: "#1d232a",
         }}>
         <View className="flex-row items-center">
-          <Avatar
-            size={32}
-            rounded
-            source={{
-              uri:
-                item.profilePictureUrl ||
-                "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-            }}
-          />
-          <View className="flex-row items-center">
-            <View className="justify-center pl-2">
-              <View className="flex-row gap-2 ">
-                <Text className="text-white font-bold">{item.user}</Text>
-                <Text className="text-white font-bold">•</Text>
-                <Text className="text-red-500 font-bold">{item.tagName}</Text>
+          <View className="flex-1 flex-row">
+            <Avatar
+              size={32}
+              rounded
+              source={{
+                uri:
+                  item.profilePictureUrl ||
+                  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+              }}
+            />
+            <View className="flex-row items-center">
+              <View className="justify-center pl-2">
+                <View className="flex-row gap-2 ">
+                  <Text className="text-white font-bold">{item.user}</Text>
+                  <Text className="text-white font-bold">•</Text>
+                  <Text className="text-red-500 font-bold">{item.tagName}</Text>
+                </View>
+                <Text className="text-xs text-gray-300">
+                  {formatTime(item.createAt)}
+                </Text>
               </View>
-              <Text className="text-xs text-gray-300">
-                {formatTime(item.createAt)}
-              </Text>
             </View>
           </View>
+          {item.userId === userLogin.id && (
+            <View className="relative">
+              <TouchableOpacity
+                className="w-10 justify-end items-end "
+                onPress={() => setModalDeleteThread(!modalDeleteThread)}>
+                <Entypo name="dots-three-horizontal" size={24} color="white" />
+              </TouchableOpacity>
+              {modalDeleteThread && (
+                <TouchableOpacity
+                  className="absolute flex-1 w-32 right-0 -bottom-10 topbg-soft Black rounded-lg flex-row py-2 px-2 drop-shadow border border-colorBorder z-10"
+                  onPress={() => handleDeletePost(item.id)}>
+                  <EvilIcons name="trash" size={24} color="white" />
+                  <Text className="text-white">Hapus Thread</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
         </View>
         <View className="mt-2">
           <Text className="text-lg font-bold text-gray-300 leading-6 mb-2">
