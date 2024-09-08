@@ -10,7 +10,7 @@ import {
   View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axiosInstance from "../../../service/axios";
 import { useSelector } from "react-redux";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -42,17 +42,19 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchUserData();
-    setUserDetail(null);
-  }, [userLogin.loggedInUser]);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserData();
+    }, [userLogin.id]),
+  );
 
   const defaultProfile = {
     fullName: "user",
     username: "user",
     bio: "Tidak ada Bio",
     profilePicture: {
-      image: "https://randomuser.me/api/portraits/men/36.jpg",
+      image:
+        "https://res.cloudinary.com/dpofjmzdu/image/upload/v1724926159/assets/pp-notfound.jpg",
     },
   };
 

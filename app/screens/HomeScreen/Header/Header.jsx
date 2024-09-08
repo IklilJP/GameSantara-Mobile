@@ -11,6 +11,7 @@ import {
   TextInput,
   ImageBackground,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -133,7 +134,26 @@ const Header = () => {
         fullName: data.fullName,
         email: data.email,
       });
-    } catch (error) {}
+
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+
+      setModalRegisterVisible(false);
+      setModalLoginVisible(true);
+    } catch (error) {
+      ToastAndroid.showWithGravityAndOffset(
+        error.response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+    }
   };
 
   return (
@@ -310,6 +330,7 @@ const Header = () => {
                       placeholder="Kata Sandi"
                       placeholderTextColor="#888"
                       secureTextEntry
+                      autoCapitalize="none"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
@@ -451,7 +472,7 @@ const Header = () => {
                         placeholder="Username"
                         placeholderTextColor="#888"
                         keyboardType="default"
-                        autoCapitalize="words"
+                        autoCapitalize="none"
                         onChangeText={onChange}
                         onBlur={onBlur}
                         value={value}
@@ -532,6 +553,7 @@ const Header = () => {
                         placeholderTextColor="#888"
                         secureTextEntry
                         onBlur={onBlur}
+                        autoCapitalize="none"
                         onChangeText={onChange}
                         value={value}
                       />
@@ -570,6 +592,7 @@ const Header = () => {
                         placeholder="Kata Sandi"
                         placeholderTextColor="#888"
                         secureTextEntry
+                        autoCapitalize="none"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}

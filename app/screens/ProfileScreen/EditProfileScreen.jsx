@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,7 +21,10 @@ const EditProfileScreen = () => {
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
   const [file, setFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPicture, setIsLoadingPicture] = useState(false);
+  const [isLoadingUsername, setIsLoadingUsername] = useState(false);
+  const [isLoadingFullname, setIsLoadingFullname] = useState(false);
+  const [isLoadingBio, setIsLoadingBio] = useState(false);
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [fullName, setFullName] = useState("");
@@ -52,41 +56,41 @@ const EditProfileScreen = () => {
     setFile(null);
   };
 
- const uploadImage = async () => {
-  if (!file) {
-    console.error("No image selected");
-    return;
-  }
-  setIsLoading(true);
-  const formData = new FormData();
-  formData.append("picture", {
-    uri: file.uri,
-    name: file.uri.split('/').pop(), 
-    type: 'image/jpeg',
-  });
-  try {
-    const response = await axiosInstance.patch(
-      "/user/profile-picture", 
-      formData, 
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    console.log("Upload successful", response.data);
-  } catch (error) {
-    if (error.response) {
-      console.error("Upload failed", error.response.data);
-    } else if (error.request) {
-      console.error("No response received", error.request);
-    } else {
-      console.error("Error", error.message);
+  const uploadImage = async () => {
+    if (!file) {
+      console.error("No image selected");
+      return;
     }
-  } finally {
-    setIsLoading(false);
-  }
-};
+    setIsLoadingPicture(true);
+    const formData = new FormData();
+    formData.append("picture", {
+      uri: file.uri,
+      name: file.uri.split("/").pop(),
+      type: "image/jpeg",
+    });
+    try {
+      const response = await axiosInstance.patch(
+        "/user/profile-picture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      console.log("Upload successful", response.data);
+    } catch (error) {
+      ToastAndroid.showWithGravityAndOffset(
+        error.response.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+    } finally {
+      setIsLoadingPicture(false);
+    }
+  };
 
   const handleUpdateUsername = async () => {
     if (username === "") {
@@ -94,16 +98,18 @@ const EditProfileScreen = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoadingUsername(true);
     try {
-      const response = await axiosInstance.patch("/user/username", { username });
+      const response = await axiosInstance.patch("/user/username", {
+        username,
+      });
       if (response.data.status === 200) {
         setUsernameError("Username berhasil diperbarui");
       }
     } catch (error) {
       setUsernameError(error.message);
     } finally {
-      setIsLoading(false);
+      setIsLoadingUsername(false);
     }
   };
 
@@ -113,16 +119,18 @@ const EditProfileScreen = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoadingFullname(true);
     try {
-      const response = await axiosInstance.patch("/user/fullname", { fullName });
+      const response = await axiosInstance.patch("/user/fullname", {
+        fullName,
+      });
       if (response.data.status === 200) {
         setFullNameError("FullName berhasil diperbarui");
       }
     } catch (error) {
       setFullNameError(error.message);
     } finally {
-      setIsLoading(false);
+      setIsLoadingUsername(false);
     }
   };
 
@@ -132,7 +140,7 @@ const EditProfileScreen = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoadingBio(true);
     try {
       const response = await axiosInstance.patch("/user/bio", { bio });
       if (response.data.status === 200) {
@@ -141,26 +149,32 @@ const EditProfileScreen = () => {
     } catch (error) {
       setBioError(error.message);
     } finally {
-      setIsLoading(false);
+      setIsLoadingBio(false);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-black">
-      <ScrollView className="flex-1 bg-black" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex-1 bg-black"
+        showsVerticalScrollIndicator={false}>
         <View className="px-5 pt-4" style={{ backgroundColor: "#1d232a" }}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={28} color="white" />
           </TouchableOpacity>
         </View>
-        <View className="justify-center items-center" style={{ backgroundColor: "#1d232a" }}>
+        <View
+          className="justify-center items-center"
+          style={{ backgroundColor: "#1d232a" }}>
           <View className="flex-row items-center justify-center gap-2">
             <Ionicons name="build-outline" size={24} color="white" />
             <Text className="text-white text-lg font-bold">Edit Profil</Text>
           </View>
           <View className="bg-slate-600 my-2 w-11/12" style={{ height: 1 }} />
         </View>
-        <View className="flex-1 pt-6 pl-6" style={{ backgroundColor: "#1d232a" }}>
+        <View
+          className="flex-1 pt-6 pl-6"
+          style={{ backgroundColor: "#1d232a" }}>
           <Text className="text-white font-bold pb-3">Foto Profil</Text>
           <View
             className="p-2"
@@ -170,13 +184,16 @@ const EditProfileScreen = () => {
               borderStyle: "dotted",
               borderRadius: 10,
               alignSelf: "flex-start",
-            }}
-          >
-            <TouchableOpacity style={styles.imageContainer} onPress={selectImage}>
+            }}>
+            <TouchableOpacity
+              style={styles.imageContainer}
+              onPress={selectImage}>
               {imageUri !== null ? (
                 <View style={styles.imageWrapper}>
                   <Image source={{ uri: imageUri }} style={styles.image} />
-                  <TouchableOpacity style={styles.cancelButton} onPress={handleCancelImage}>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={handleCancelImage}>
                     <Text style={styles.cancelButtonText}>Cancel</Text>
                   </TouchableOpacity>
                 </View>
@@ -195,10 +212,9 @@ const EditProfileScreen = () => {
                 alignSelf: "flex-start",
               }}
               onPress={uploadImage}
-              disabled={isLoading}
-            >
+              disabled={isLoadingPicture}>
               <Text className="text-red-600 font-bold">
-                {isLoading ? "Uploading..." : "Upload"}
+                {isLoadingPicture ? "Uploading..." : "Upload"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -269,10 +285,9 @@ const EditProfileScreen = () => {
                   alignSelf: "flex-start",
                 }}
                 onPress={handleUpdateUsername}
-                disabled={isLoading}
-              >
+                disabled={isLoadingUsername}>
                 <Text className="text-red-600 font-bold">
-                  {isLoading ? "Updating..." : "Ganti"}
+                  {isLoadingUsername ? "Updating..." : "Ganti"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -343,10 +358,9 @@ const EditProfileScreen = () => {
                   alignSelf: "flex-start",
                 }}
                 onPress={handleUpdateFullName}
-                disabled={isLoading}
-              >
+                disabled={isLoadingFullname}>
                 <Text className="text-red-600 font-bold">
-                  {isLoading ? "Updating..." : "Ganti"}
+                  {isLoadingFullname ? "Updating..." : "Ganti"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -404,10 +418,9 @@ const EditProfileScreen = () => {
                   alignSelf: "flex-start",
                 }}
                 onPress={handleUpdateBio}
-                disabled={isLoading}
-              >
+                disabled={isLoadingBio}>
                 <Text className="text-red-600 font-bold">
-                  {isLoading ? "Updating..." : "Ganti"}
+                  {isLoadingBio ? "Updating..." : "Ganti"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -464,3 +477,4 @@ const styles = StyleSheet.create({
 });
 
 export default EditProfileScreen;
+
