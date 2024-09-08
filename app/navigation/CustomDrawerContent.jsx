@@ -32,8 +32,7 @@ const CustomDrawerContent = (props) => {
         <TouchableOpacity
           className="p-3"
           onPress={() => navigateToScreen("Home")}
-          style={[currentRoute === "Home" && { backgroundColor: "#dc2626" }]}
-        >
+          style={[currentRoute === "Home" && { backgroundColor: "#dc2626" }]}>
           <View className="flex-row gap-5 items-center">
             <Ionicons name="home" size={24} color="white" />
             <Text className="text-white">Home</Text>
@@ -46,7 +45,12 @@ const CustomDrawerContent = (props) => {
       </View>
       {topicList.map((topic, index) => (
         <View key={index} className="px-4">
-          <TouchableOpacity className="px-3 py-2" style={currentRoute === topic.name && {backgroundColor: '#dc2626'}} onPress={() => navigateToScreen(topic.name)}>
+          <TouchableOpacity
+            className="px-3 py-2"
+            style={
+              currentRoute === topic.name && { backgroundColor: "#dc2626" }
+            }
+            onPress={() => navigateToScreen(topic.id)}>
             <View className="flex-row gap-5 items-center">
               <Image source={{ uri: topic.imgUrl }} width={25} height={25} />
               <Text className="text-white capitalize">{topic.name}</Text>

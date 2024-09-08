@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
   FlatList,
   View,
+  Text,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
@@ -30,7 +32,8 @@ const Posts = (props) => {
         params: {
           page: page,
           size: 10,
-          q: props?.tags,
+          by: props?.id ? "tag" : null,
+          tagId: props?.id,
         },
       });
 
@@ -85,9 +88,21 @@ const Posts = (props) => {
         keyExtractor={(item) => item.id}
         onEndReached={loadMorePosts}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={() =>
-          loadingMore ? <ActivityIndicator size="large" color="white" /> : null
-        }
+        ListFooterComponent={() => (
+          <>
+            {loadingMore ? (
+              <ActivityIndicator size="large" color="white" />
+            ) : null}
+            {!hasMore && (
+              <View style={{ alignItems: "center", marginTop: 20 }}>
+                <MaterialIcons name="scuba-diving" size={24} color="red" />
+                <Text className="text-center text-white">
+                  Kamu menyelam terlalu dalam. Sudah tidak ada thread lagi
+                </Text>
+              </View>
+            )}
+          </>
+        )}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

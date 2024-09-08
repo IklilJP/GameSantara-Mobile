@@ -1,5 +1,5 @@
-import { Avatar, Card } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
   ActivityIndicator,
   FlatList,
@@ -32,8 +32,8 @@ const PostsLatests = (props) => {
         params: {
           page: page,
           size: 10,
-          q: props?.tags,
-          by: "latest",
+          tagId: props?.id,
+          by: props?.id ? "tag-latest" : "latest",
         },
       });
 
@@ -98,11 +98,21 @@ const PostsLatests = (props) => {
           onEndReachedThreshold={0.5}
           refreshing={refreshing} // Bind the refreshing state
           onRefresh={handleRefresh} // Bind the refresh handler
-          ListFooterComponent={() =>
-            loadingMore ? (
-              <ActivityIndicator size="large" color="white" />
-            ) : null
-          }
+          ListFooterComponent={() => (
+            <>
+              {loadingMore ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : null}
+              {!hasMore && (
+                <View style={{ alignItems: "center", marginTop: 20 }}>
+                  <MaterialIcons name="scuba-diving" size={24} color="red" />
+                  <Text className="text-center text-white">
+                    Kamu menyelam terlalu dalam. Sudah tidak ada thread lagi
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
         />
       </View>
     </View>

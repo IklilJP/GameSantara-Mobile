@@ -29,15 +29,14 @@ const DrawerNavigator = () => {
         headerShown: false,
         drawerStyle: { backgroundColor: "#1d232a", width: "70%" },
         drawerItemStyle: { backgroundColor: "#dc2626" },
-      }}
-    >
+      }}>
       <Drawer.Screen name="Home" component={StackNavigator} />
       {topicList.map((topic, index) => (
         <Drawer.Screen
           key={index}
-          name={topic.name}
+          name={topic.id}
           component={GeneralPageScreen}
-          initialParams={{img: topic.imgUrl, title: topic.name, id: topic.id}}
+          initialParams={{ img: topic.imgUrl, title: topic.name, id: topic.id }}
         />
       ))}
     </Drawer.Navigator>

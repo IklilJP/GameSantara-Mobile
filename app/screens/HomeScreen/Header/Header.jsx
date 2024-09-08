@@ -174,7 +174,9 @@ const Header = () => {
           />
         </View>
         <View className="flex-row w-[55%] justify-end items-end gap-2">
-          <Ionicons name="search" size={26} color="white" />
+          <TouchableOpacity onPress={() => navigation.navigate("Search")}>
+            <Ionicons name="search" size={26} color="white" />
+          </TouchableOpacity>
           <TouchableOpacity onPress={openModal}>
             <Ionicons name="person-circle" size={26} color="white" />
           </TouchableOpacity>

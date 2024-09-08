@@ -45,13 +45,13 @@ const GeneralPageScreen = ({ route }) => {
         </Tab>
         <TabView value={index} onChange={setIndex} animationType="spring">
           <TabView.Item style={{ width: "100%" }}>
-            <Posts tags={title} />
+            <Posts tags={title} id={id} />
           </TabView.Item>
           <TabView.Item style={{ width: "100%" }}>
-            <PostsTrends tags={title} />
+            <PostsTrends tags={title} id={id} />
           </TabView.Item>
           <TabView.Item style={{ width: "100%" }}>
-            <PostsLatests tags={title} />
+            <PostsLatests tags={title} id={id} />
           </TabView.Item>
         </TabView>
       </View>
