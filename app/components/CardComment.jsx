@@ -168,7 +168,7 @@ const CardComment = ({ postId, comments = [], setComments }) => {
               value={contentComment}
               multiline={true}
               numberOfLines={5}
-              onChangeText={(e) => setContentComment(e.trim())}
+              onChangeText={(e) => setContentComment(e)}
               ref={textInputRef}
               className="text-[#fff]"
               style={{

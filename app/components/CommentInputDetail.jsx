@@ -57,7 +57,7 @@ const CommentInputDetail = ({
           <TextInput
             multiline={true}
             numberOfLines={10}
-            onChangeText={(e) => setContentComment(e.trim())}
+            onChangeText={(e) => setContentComment(e)}
             value={contentComment}
             ref={textInputRef}
             className="text-[#fff]"

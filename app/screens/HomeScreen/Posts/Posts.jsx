@@ -86,6 +86,7 @@ const Posts = (props) => {
           <CardPost item={item} setThreadList={setThreadList} />
         )}
         keyExtractor={(item) => item.id}
+        removeClippedSubviews={true}
         onEndReached={loadMorePosts}
         onEndReachedThreshold={0.5}
         ListFooterComponent={() => (
