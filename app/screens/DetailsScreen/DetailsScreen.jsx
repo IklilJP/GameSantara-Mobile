@@ -23,6 +23,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useSelector } from "react-redux";
 import Entypo from "@expo/vector-icons/Entypo";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import ShareButton from "../../components/ShareButton";
 
 const DetailsScreen = ({ route }) => {
   const { postId } = route.params;
@@ -246,7 +247,7 @@ const DetailsScreen = ({ route }) => {
                     size={20}
                     color={threadDetail.isUpVoted ? "#16a34a" : "white"}
                   />
-                  <Text className={"text-white pl-2"}>
+                  <Text className="text-white p-1 font-bold">
                     {threadDetail.upVotesCount}
                   </Text>
                 </TouchableOpacity>
@@ -265,13 +266,14 @@ const DetailsScreen = ({ route }) => {
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
-                className="p-1 pl-5"
+                className="flex-row py-1 px-3 items-center"
                 onPress={() => setIsComment(!isComment)}>
                 <Ionicons name="chatbox-outline" size={22} color="white" />
+                <Text className="text-white p-1 font-bold">
+                  {threadDetail.commentsCount}
+                </Text>
               </TouchableOpacity>
-              <Text className="text-white p-1">
-                {threadDetail.commentsCount}
-              </Text>
+              <ShareButton contentToShare={"https://example.com/posts/${id}"} />
             </View>
           </View>
 

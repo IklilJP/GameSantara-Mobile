@@ -10,6 +10,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import axiosInstance from "../service/axios";
 import { useSelector } from "react-redux";
+import ShareButton from "./ShareButton";
 
 const CardPost = ({ item, setThreadList }) => {
   const navigation = useNavigation();
@@ -25,6 +26,8 @@ const CardPost = ({ item, setThreadList }) => {
   const goToProfile = () => {
     navigation.navigate("Profile", { userId: userLogin?.id });
   };
+
+  const handleShare = () => {};
 
   const handleDeletePost = async (id) => {
     try {
@@ -167,6 +170,7 @@ const CardPost = ({ item, setThreadList }) => {
               {item.commentsCount}
             </Text>
           </TouchableOpacity>
+          <ShareButton contentToShare={"https://example.com/posts/${id}"} />
         </View>
       </Card>
     </TouchableOpacity>
