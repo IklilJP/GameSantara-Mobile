@@ -100,7 +100,7 @@ const DetailsScreen = ({ route }) => {
             <View
               className="flex-row items-center justify-between my-2"
               style={{ gap: 10 }}>
-              <View className="flex-row items-center">
+              <View className="flex-row items-center" style={{ gap: 10 }}>
                 <Avatar
                   size={38}
                   rounded
