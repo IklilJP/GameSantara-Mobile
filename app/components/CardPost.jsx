@@ -124,7 +124,7 @@ const CardPost = ({ item, setThreadList }) => {
           <View className="flex-row items-center bg-gray-800 rounded-xl border border-gray-600">
             <TouchableOpacity
               className="flex-row py-1 px-3 items-center border-r border-gray-600"
-              onPress={() => handleUpVote(item, setThreadList)}>
+              onPress={() => handleUpVote(item, setThreadList, userLogin)}>
               <MaterialCommunityIcons
                 name={
                   item.isUpVoted ? "arrow-up-bold" : "arrow-up-bold-outline"
@@ -142,7 +142,7 @@ const CardPost = ({ item, setThreadList }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => handleDownVote(item, setThreadList)}
+              onPress={() => handleDownVote(item, setThreadList, userLogin)}
               className="flex-row py-1 px-3 items-center border-l border-gray-600">
               <MaterialCommunityIcons
                 name={

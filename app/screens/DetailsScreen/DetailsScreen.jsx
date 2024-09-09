@@ -70,10 +70,30 @@ const DetailsScreen = ({ route }) => {
   }, []);
 
   const handleUpVote = () => {
+    if (!userLogin) {
+      ToastAndroid.showWithGravityAndOffset(
+        "Harap Login Terlebih dahulu",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
     upVoteThread(threadDetail.id, setThreadDetail);
   };
 
   const handleDownVote = () => {
+    if (!userLogin) {
+      ToastAndroid.showWithGravityAndOffset(
+        "Harap Login Terlebih dahulu",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
     downVoteThread(threadDetail.id, setThreadDetail);
   };
 

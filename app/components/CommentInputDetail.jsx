@@ -4,14 +4,11 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  ToastAndroid,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useSelector } from "react-redux";
 import { sendComment } from "../service/commentService";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const CommentInputDetail = ({
   threadDetail,
@@ -27,8 +24,25 @@ const CommentInputDetail = ({
   );
 
   const handleSendComment = () => {
+    if (!userLogin) {
+      ToastAndroid.showWithGravityAndOffset(
+        "Harap Login Terlebih dahulu",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+      return;
+    }
+
     if (!contentComment.trim()) {
-      console.log("Tolong isi komen");
+      ToastAndroid.showWithGravityAndOffset(
+        "Input tidak boleh kosong",
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
       return;
     }
 

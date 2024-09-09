@@ -1,3 +1,4 @@
+import { ToastAndroid } from "react-native";
 import axiosInstance from "./axios";
 
 // vote Detail Post
@@ -94,7 +95,18 @@ export const downVoteThread = async (threadId, setThreadDetail) => {
 };
 
 // vote Card Post
-export const handleUpVote = async (thread, setThreadList) => {
+export const handleUpVote = async (thread, setThreadList, userLogin) => {
+  if (!userLogin) {
+    ToastAndroid.showWithGravityAndOffset(
+      "Harap Login Terlebih dahulu",
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      25,
+      50,
+    );
+    return;
+  }
+
   setThreadList((prevPosts) =>
     prevPosts.map((post) =>
       post.id === thread.id
@@ -125,7 +137,18 @@ export const handleUpVote = async (thread, setThreadList) => {
   }
 };
 
-export const handleDownVote = async (thread, setThreadList) => {
+export const handleDownVote = async (thread, setThreadList, userLogin) => {
+  if (!userLogin) {
+    ToastAndroid.showWithGravityAndOffset(
+      "Harap Login Terlebih dahulu",
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      25,
+      50,
+    );
+    return;
+  }
+
   setThreadList((prevPosts) =>
     prevPosts.map((post) =>
       post.id === thread.id
