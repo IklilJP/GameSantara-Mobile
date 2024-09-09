@@ -103,16 +103,24 @@ const Header = () => {
       });
       setModalLoginVisible(false);
     } catch (error) {
-      Toast.show({
-        type: "error",
-        position: "top",
-        text1: "Kredensial Salah",
-        text2: "Email/Password salah",
-        visibilityTime: 4000,
-        autoHide: true,
-        topOffset: 50,
-        bottomOffset: 40,
-      });
+      console.log(error.response.data.status);
+      if (error.response.data.status === 401) {
+        ToastAndroid.showWithGravityAndOffset(
+          "Salah email atau password",
+          ToastAndroid.LONG,
+          ToastAndroid.TOP,
+          25,
+          50,
+        );
+      } else {
+        ToastAndroid.showWithGravityAndOffset(
+          error.response.data.message,
+          ToastAndroid.LONG,
+          ToastAndroid.TOP,
+          25,
+          50,
+        );
+      }
     }
   };
 
@@ -170,7 +178,7 @@ const Header = () => {
             source={{
               uri: "https://res.cloudinary.com/dpofjmzdu/image/upload/v1725716658/logo-header-mobile.png",
             }}
-            style={{ width: 30, height: 30 }}
+            style={{ width: 40, height: 40, marginLeft: 5 }}
           />
         </View>
         <View className="flex-row w-[55%] justify-end items-end gap-2">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { ToastAndroid, TouchableOpacity } from "react-native";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -19,6 +19,7 @@ const AddThreadScreen = () => {
   const [imageList, setImageList] = useState([]);
   const [open, setOpen] = useState(false);
   const [tagItems, setTagItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const userLogin = useSelector(
     (state) => state.loggedInUser.loggedInUser.data,
   );
@@ -61,31 +62,8 @@ const AddThreadScreen = () => {
     setImageList(imageList.filter((image, index) => index !== id));
   };
 
-  const uploadImage = async (uri) => {
-    const formData = new FormData();
-    formData.append("photo", {
-      uri,
-      type: "image/jpeg",
-      name: "photo.jpg",
-    });
-
-    try {
-      const response = await axiosInstance.post(
-        "https://your-server.com/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-      console.log("Upload successful", response.data);
-    } catch (error) {
-      console.error("Upload failed", error);
-    }
-  };
-
   const handleCreateThread = async (data) => {
+    setIsLoading(true);
     try {
       const config = {
         headers: {
@@ -95,6 +73,7 @@ const AddThreadScreen = () => {
           return formData; // this is doing the trick
         },
       };
+
       const formData = new FormData();
 
       const postCreateRequest = JSON.stringify({
@@ -121,16 +100,33 @@ const AddThreadScreen = () => {
         formData.append("pictures", newImage);
       });
       // formData.append("pictures", imageList);
-      console.log(postCreateRequest);
-      console.log(formData);
       const response = await axiosInstance.post("/post", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response);
+
+      ToastAndroid.showWithGravityAndOffset(
+        response.data.data.message,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+
+      navigation.navigate("Homes");
     } catch (error) {
-      console.log(error.message);
+      const errorMessage =
+        error.response?.data?.message || "Terjadi kesalahan, coba lagi";
+      ToastAndroid.showWithGravityAndOffset(
+        errorMessage,
+        ToastAndroid.LONG,
+        ToastAndroid.TOP,
+        25,
+        50,
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -297,7 +293,9 @@ const AddThreadScreen = () => {
                   alignSelf: "flex-start",
                 }}
                 onPress={handleSubmit(handleCreateThread)}>
-                <Text className="text-red-600 font-bold">Buat</Text>
+                <Text className="text-red-600 font-bold">
+                  {isLoading ? "Loading..." : "Buat"}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

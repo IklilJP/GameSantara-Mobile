@@ -104,6 +104,19 @@ const EditProfileScreen = () => {
       return;
     }
 
+    if (username.length < 4) {
+      setUsernameError("Username harus minimal 4 karakter");
+      return;
+    }
+
+    const usernameRegex = /^[a-z0-9]+$/;
+    if (!usernameRegex.test(username)) {
+      setUsernameError(
+        "Username hanya boleh mengandung huruf kecil dan angka tanpa spasi",
+      );
+      return;
+    }
+
     setIsLoadingUsername(true);
     try {
       const response = await axiosInstance.patch("/user/username", {
@@ -118,8 +131,10 @@ const EditProfileScreen = () => {
         50,
       );
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Terjadi kesalahan, coba lagi";
       ToastAndroid.showWithGravityAndOffset(
-        error.response.data.message,
+        errorMessage,
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         25,
@@ -136,6 +151,11 @@ const EditProfileScreen = () => {
       return;
     }
 
+    if (fullName.length < 4) {
+      setFullNameError("Fullname harus minimal 4 karakter");
+      return;
+    }
+
     setIsLoadingFullname(true);
     try {
       const response = await axiosInstance.patch("/user/fullname", {
@@ -143,22 +163,24 @@ const EditProfileScreen = () => {
       });
 
       ToastAndroid.showWithGravityAndOffset(
-        response.data.message,
+        response.data.data.message,
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         25,
         50,
       );
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Terjadi kesalahan, coba lagi";
       ToastAndroid.showWithGravityAndOffset(
-        error.response.data.message,
+        errorMessage,
         ToastAndroid.LONG,
         ToastAndroid.TOP,
         25,
         50,
       );
     } finally {
-      setIsLoadingUsername(false);
+      setIsLoadingFullname(false);
     }
   };
 
@@ -277,6 +299,10 @@ const EditProfileScreen = () => {
                   if (value.startsWith(" ")) {
                     return "Username tidak boleh diawali dengan spasi";
                   }
+                  const usernameRegex = /^[a-z0-9]+$/;
+                  if (!usernameRegex.test(value)) {
+                    return "Username hanya boleh mengandung huruf kecil dan angka tanpa spasi";
+                  }
                   return true;
                 },
               }}
@@ -303,6 +329,11 @@ const EditProfileScreen = () => {
                   {errors.username && (
                     <Text className="text-red-500 justify-start">
                       {errors.username.message}
+                    </Text>
+                  )}
+                  {usernameError && (
+                    <Text className="text-red-500 justify-start">
+                      {usernameError}
                     </Text>
                   )}
                 </View>

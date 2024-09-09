@@ -46,7 +46,7 @@ const Posts = (props) => {
 
       setHasMore(paging.hasNext);
     } catch (error) {
-      if (error.response && error.response.status === 404) {
+      if (error.response && error.response?.status === 404) {
         setHasMore(false);
       } else {
         console.log(error);
