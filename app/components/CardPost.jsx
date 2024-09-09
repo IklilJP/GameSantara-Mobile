@@ -75,7 +75,7 @@ const CardPost = ({ item, setThreadList }) => {
               </View>
             </View>
           </View>
-          {item.userId === userLogin.id && (
+          {item.userId === userLogin?.id && (
             <View className="relative">
               <TouchableOpacity
                 className="w-10 justify-end items-end "
