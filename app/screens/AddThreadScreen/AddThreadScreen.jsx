@@ -84,7 +84,6 @@ const AddThreadScreen = () => {
 
       const fileUri = FileSystem.documentDirectory + "postCreateRequest.json";
       await FileSystem.writeAsStringAsync(fileUri, postCreateRequest);
-      console.log(fileUri);
       formData.append("postCreateRequest", {
         uri: fileUri,
         type: "application/json",
@@ -96,7 +95,6 @@ const AddThreadScreen = () => {
           type: "image/jpeg",
           name: image.fileName,
         };
-        console.log(newImage);
         formData.append("pictures", newImage);
       });
       // formData.append("pictures", imageList);
@@ -115,6 +113,7 @@ const AddThreadScreen = () => {
       );
 
       navigation.navigate("Homes");
+      setImageList([]);
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Terjadi kesalahan, coba lagi";

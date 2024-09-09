@@ -22,6 +22,10 @@ const CardPost = ({ item, setThreadList }) => {
     navigation.navigate("Details", { postId: item.id });
   };
 
+  const goToProfile = () => {
+    navigation.navigate("Profile", { userId: userLogin?.id });
+  };
+
   const handleDeletePost = async (id) => {
     try {
       const response = await axiosInstance.delete(`/post/${id}`);

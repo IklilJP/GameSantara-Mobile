@@ -95,7 +95,6 @@ const Header = () => {
       await AsyncStorage.setItem("loggedInUser", JSON.stringify(response.data));
 
       const responseUserDetail = await axiosInstance.get("/user");
-      console.log("response User Detail", responseUserDetail.data);
 
       dispatch({
         type: "LOGIN",
@@ -103,7 +102,6 @@ const Header = () => {
       });
       setModalLoginVisible(false);
     } catch (error) {
-      console.log(error.response.data.status);
       if (error.response.data.status === 401) {
         ToastAndroid.showWithGravityAndOffset(
           "Salah email atau password",

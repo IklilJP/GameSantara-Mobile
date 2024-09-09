@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
   const user = useSelector((state) => state.loggedInUser.loggedInUser.data);
-  const userId = user?.id;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -44,7 +44,7 @@ function TabNavigator() {
       {user && (
         <Tab.Screen
           name="Profile"
-          initialParams={{ userId }}
+          initialParams={{ userId: user?.id }}
           component={ProfileScreen}
         />
       )}
