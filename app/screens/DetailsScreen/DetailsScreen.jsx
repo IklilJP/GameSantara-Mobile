@@ -127,7 +127,7 @@ const DetailsScreen = ({ route }) => {
                 </View>
               </View>
 
-              {threadDetail.userId === userLogin.id && (
+              {threadDetail.userId === userLogin?.id && (
                 <View className="relative">
                   <TouchableOpacity
                     className="w-10 justify-end items-end "
