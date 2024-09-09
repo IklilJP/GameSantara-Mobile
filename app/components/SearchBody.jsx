@@ -44,7 +44,9 @@ const SearchBody = ({ navigation }) => {
     <SafeAreaView>
       <View className="bg-black min-h-screen">
         <View className="flex-row items-center py-2  px-2 ">
-          <AntDesign name="arrowleft" size={24} color="white" />
+          <TouchableOpacity className="" onPress={() => navigation.goBack()}>
+            <AntDesign name="arrowleft" size={24} color="white" />
+          </TouchableOpacity>
           <View className="flex-row flex-1 items-center ml-5">
             <EvilIcons name="search" size={24} color="white" />
             <TextInput

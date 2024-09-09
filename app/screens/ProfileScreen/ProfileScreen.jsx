@@ -9,7 +9,7 @@ const ProfileScreen = ({ route }) => {
   const { userId } = route.params;
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1">
       <View className="flex-1 bg-black">
         <Header />
         <Profile userId={userId} />

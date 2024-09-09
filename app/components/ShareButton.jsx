@@ -6,7 +6,7 @@ const ShareButton = ({ contentToShare }) => {
   const handleShare = async () => {
     try {
       const result = await Share.share({
-        message: contentToShare, // This is the content to be shared
+        message: contentToShare,
       });
 
       if (result.action === Share.sharedAction) {
