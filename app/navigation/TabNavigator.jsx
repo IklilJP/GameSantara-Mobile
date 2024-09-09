@@ -44,8 +44,13 @@ function TabNavigator() {
       {user && (
         <Tab.Screen
           name="Profile"
-          initialParams={{ userId: user?.id }}
+          options={{ unmountOnBlur: true }}
           component={ProfileScreen}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              navigation.setParams({ userId: user.id });
+            },
+          })}
         />
       )}
     </Tab.Navigator>

@@ -57,6 +57,10 @@ const DetailsScreen = ({ route }) => {
     }
   };
 
+  const goToProfile = (userId) => {
+    navigation.navigate("Profile", { userId });
+  };
+
   const fetchDetailPost = async () => {
     try {
       const response = await axiosInstance.get(`/post/${postId}`);
@@ -122,21 +126,27 @@ const DetailsScreen = ({ route }) => {
               className="flex-row items-center justify-between my-2"
               style={{ gap: 10 }}>
               <View className="flex-row items-center" style={{ gap: 10 }}>
-                <Avatar
-                  size={38}
-                  rounded
-                  source={{
-                    uri:
-                      threadDetail.profilePictureUrl ||
-                      "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-                  }}
-                />
+                <TouchableOpacity
+                  onPress={() => goToProfile(threadDetail.userId)}>
+                  <Avatar
+                    size={38}
+                    rounded
+                    source={{
+                      uri:
+                        threadDetail.profilePictureUrl ||
+                        "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+                    }}
+                  />
+                </TouchableOpacity>
 
                 <View>
                   <View className="flex-row items-center" style={{ gap: 7 }}>
-                    <Text className="text-gray-300 font-bold">
-                      {threadDetail.user}
-                    </Text>
+                    <TouchableOpacity
+                      onPress={() => goToProfile(threadDetail.userId)}>
+                      <Text className="text-gray-300 font-bold">
+                        {threadDetail.user}
+                      </Text>
+                    </TouchableOpacity>
                     <Text className="text-gray-300 text-xl">&bull;</Text>
                     <Text className="text-red-600 font-bold">
                       {threadDetail.tagName}
@@ -269,7 +279,7 @@ const DetailsScreen = ({ route }) => {
                 className="flex-row py-1 px-3 items-center"
                 onPress={() => setIsComment(!isComment)}>
                 <Ionicons name="chatbox-outline" size={22} color="white" />
-                <Text className="text-white p-1 font-bold">
+                <Text className="text-white p-1 ml-1 font-bold">
                   {threadDetail.commentsCount}
                 </Text>
               </TouchableOpacity>

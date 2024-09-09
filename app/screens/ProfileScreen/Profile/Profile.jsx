@@ -44,7 +44,7 @@ const Profile = ({ userId }) => {
   useFocusEffect(
     React.useCallback(() => {
       fetchUserData();
-    }, [userLogin.id]),
+    }, [userLogin.id, userId]),
   );
 
   const defaultProfile = {
@@ -84,16 +84,18 @@ const Profile = ({ userId }) => {
                 <Text style={styles.statLabel}>upvote</Text>
               </View>
             </View>
-            {userId === userDetail.id && (
-              <View className="flex-1 w-full justify-center items-center">
-                <TouchableOpacity style={styles.menuButton} onPress={openModal}>
+            <View className="flex-1 w-full justify-center items-center">
+              {userId === userDetail?.id && (
+                <TouchableOpacity
+                  className="flex-row border border-colorBorder items-center rounded-xl px-4 py-1.5 justify-center"
+                  onPress={openModal}>
                   <FontAwesome name="edit" size={15} color={"white"} />
-                  <Text className="text-white text-xs text-center">
+                  <Text className="text-[#fff] text-xs text-center">
                     Edit Profile
                   </Text>
                 </TouchableOpacity>
-              </View>
-            )}
+              )}
+            </View>
           </View>
         </View>
         <View style={styles.profileDetails}>
@@ -158,19 +160,6 @@ const styles = StyleSheet.create({
   statLabel: {
     textAlign: "center",
     color: "white",
-  },
-  menuButton: {
-    // width: "50%",
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "row",
-    borderRadius: 20,
-    gap: 10,
-    // flex: 1,
   },
   profileDetails: {
     paddingTop: 10,

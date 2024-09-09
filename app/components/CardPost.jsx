@@ -23,11 +23,9 @@ const CardPost = ({ item, setThreadList }) => {
     navigation.navigate("Details", { postId: item.id });
   };
 
-  const goToProfile = () => {
-    navigation.navigate("Profile", { userId: userLogin?.id });
+  const goToProfile = (userId) => {
+    navigation.navigate("Profile", { userId });
   };
-
-  const handleShare = () => {};
 
   const handleDeletePost = async (id) => {
     try {
@@ -60,15 +58,17 @@ const CardPost = ({ item, setThreadList }) => {
         }}>
         <View className="flex-row items-center">
           <View className="flex-1 flex-row">
-            <Avatar
-              size={32}
-              rounded
-              source={{
-                uri:
-                  item.profilePictureUrl ||
-                  "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
-              }}
-            />
+            <TouchableOpacity onPress={() => goToProfile(item.userId)}>
+              <Avatar
+                size={32}
+                rounded
+                source={{
+                  uri:
+                    item.profilePictureUrl ||
+                    "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg",
+                }}
+              />
+            </TouchableOpacity>
             <View className="flex-row items-center">
               <View className="justify-center pl-2">
                 <View className="flex-row gap-2 ">
@@ -170,7 +170,9 @@ const CardPost = ({ item, setThreadList }) => {
               {item.commentsCount}
             </Text>
           </TouchableOpacity>
-          <ShareButton contentToShare={"https://example.com/posts/${id}"} />
+          <View className="pl-3">
+            <ShareButton contentToShare={"https://example.com/posts/${id}"} />
+          </View>
         </View>
       </Card>
     </TouchableOpacity>
